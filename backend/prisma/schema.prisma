@@ -12,3 +12,70 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id String @id @default(uuid())
+  name String @db.VarChar(50)
+  surname String? @db.VarChar(100)
+  job String @db.VarChar(50)
+  section String @db.VarChar(50)
+
+  Lend Lend[]
+}
+
+model Category {
+  id String @id @default(uuid())
+  name String @db.VarChar(50)
+  Tools Tool[]
+}
+
+model Brand {
+  id String @id @default(uuid())
+  name String @db.VarChar(50)
+  waste_rate Int @db.SmallInt
+  Tools Tool[]
+}
+
+model Bundle {
+  id String @id @default(uuid())
+  name String @db.VarChar(50)
+
+  Tools Tool[]
+}
+
+model Tool {
+  id Int @id @default(autoincrement())
+  name String @db.VarChar(100)
+  inserted_at DateTime @default(now())
+  wastage Int @db.SmallInt
+  status Tool_Status @default(AVAILABLE)
+
+  category Category @relation(fields: [categoryId], references: [id])
+  categoryId String
+
+  brand Brand @relation(fields: [brandId], references: [id])
+  brandId String
+
+  bundle Bundle? @relation(fields: [bundleId], references: [id])
+  bundleId String?
+
+  Lend Lend[]
+}
+
+model Lend {
+  id String @id @default(uuid())
+  lend_date DateTime @default(now())
+  limit_date DateTime
+
+  user User @relation(fields: [userId], references: [id])
+  userId String
+
+  tool Tool @relation(fields: [toolId], references: [id])
+  toolId Int
+}
+
+enum Tool_Status {
+  AVAILABLE
+  UNAVAILABLE
+  LENDED
+}
