@@ -47,7 +47,7 @@ model Tool {
   id Int @id @default(autoincrement())
   name String @db.VarChar(100)
   inserted_at DateTime @default(now())
-  wastage Int @db.SmallInt
+  wastage Int? @db.SmallInt @default(0)
   status Tool_Status @default(AVAILABLE)
 
   category Category @relation(fields: [categoryId], references: [id])
