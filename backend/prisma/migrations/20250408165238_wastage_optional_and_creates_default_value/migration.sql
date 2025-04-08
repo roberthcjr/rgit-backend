@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Tool" ALTER COLUMN "wastage" DROP NOT NULL,
+ALTER COLUMN "wastage" SET DEFAULT 0;
