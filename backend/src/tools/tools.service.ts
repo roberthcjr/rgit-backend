@@ -24,17 +24,17 @@ export class ToolsService {
 
   insertCSV() {
     const tools: { name: string }[] = [];
-    createReadStream(
-      '/home/robert/Workspaces/Faculdade/TCC/gestao_ferramentas_fermag/backend/events/tools/insercao.csv',
-    )
-      .pipe(csv())
-      .on('data', (data) => tools.push(data))
-      .on('end', () => {
-        console.log(tools);
-        this.toolsRepository.createManyTools(tools);
-      });
-
-    return tools;
+    return new Promise((resolve, reject) =>
+      createReadStream(
+        '/home/robert/Workspaces/Faculdade/TCC/gestao_ferramentas_fermag/backend/events/tools/insercaoTeste.csv',
+      )
+        .on('error', (error) => reject(error))
+        .pipe(csv())
+        .on('data', (data) => tools.push(data))
+        .on('end', async () => {
+          resolve(this.toolsRepository.createManyTools(tools));
+        }),
+    );
   }
 
   findAll() {
