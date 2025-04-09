@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { ToolsService } from './tools.service';
 import { CreateToolDto } from './dto/create-tool.dto';
 import { UpdateToolDto } from './dto/update-tool.dto';
@@ -10,6 +18,11 @@ export class ToolsController {
   @Post()
   create(@Body() createToolDto: CreateToolDto) {
     return this.toolsService.create(createToolDto);
+  }
+
+  @Post('/importCSV')
+  createCSV() {
+    return this.toolsService.insertCSV();
   }
 
   @Get()

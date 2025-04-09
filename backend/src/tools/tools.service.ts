@@ -2,6 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { CreateToolDto } from './dto/create-tool.dto';
 import { UpdateToolDto } from './dto/update-tool.dto';
 import { ToolsRepository } from './tools.repository/tools.repository';
+import { createReadStream } from 'fs';
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+import csv = require('csv-parser');
 
 @Injectable()
 export class ToolsService {
@@ -17,6 +20,21 @@ export class ToolsService {
         connect: category,
       },
     });
+  }
+
+  insertCSV() {
+    const tools: { name: string }[] = [];
+    createReadStream(
+      '/home/robert/Workspaces/Faculdade/TCC/gestao_ferramentas_fermag/backend/events/tools/insercao.csv',
+    )
+      .pipe(csv())
+      .on('data', (data) => tools.push(data))
+      .on('end', () => {
+        console.log(tools);
+        this.toolsRepository.createManyTools(tools);
+      });
+
+    return tools;
   }
 
   findAll() {

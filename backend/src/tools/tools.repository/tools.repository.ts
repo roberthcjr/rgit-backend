@@ -37,6 +37,12 @@ export class ToolsRepository {
     });
   }
 
+  async createManyTools(data: Prisma.ToolCreateManyInput) {
+    this.prisma.tool.createMany({
+      data,
+    });
+  }
+
   async updateTool(params: {
     where: Prisma.ToolWhereUniqueInput;
     data: Prisma.ToolUpdateInput;
