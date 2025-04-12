@@ -2,13 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { CreateToolDto } from './dto/create-tool.dto';
 import { UpdateToolDto } from './dto/update-tool.dto';
 import { ToolsRepository } from './tools.repository/tools.repository';
-import { createReadStream } from 'fs';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 import csv = require('csv-parser');
+import { Readable } from 'stream';
 
 @Injectable()
 export class ToolsService {
-  constructor(private toolsRepository: ToolsRepository) {}
+  constructor(private toolsRepository: ToolsRepository) { }
   create(createToolDto: CreateToolDto) {
     const { name, brand, category } = createToolDto;
     return this.toolsRepository.createTool({
@@ -22,12 +22,11 @@ export class ToolsService {
     });
   }
 
-  insertCSV() {
+  insertCSV(file: Express.Multer.File) {
     const tools: { name: string }[] = [];
+    const readableStream = Readable.from(file.buffer);
     return new Promise((resolve, reject) =>
-      createReadStream(
-        '/home/robert/Workspaces/Faculdade/TCC/gestao_ferramentas_fermag/backend/events/tools/insercaoTeste.csv',
-      )
+      readableStream
         .on('error', (error) => reject(error))
         .pipe(csv())
         .on('data', (data) => tools.push(data))
