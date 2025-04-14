@@ -20,18 +20,31 @@ export class ToolsService {
   }
 
   findAll() {
-    return `This action returns all tools`;
+    return this.toolsRepository.tools({});
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} tool`;
+    return this.toolsRepository.tool({ id });
   }
 
   update(id: number, updateToolDto: UpdateToolDto) {
-    return `This action updates a #${id} tool`;
+    const { brand, bundle, insertedAt, category, name, status, wastage } =
+      updateToolDto;
+    return this.toolsRepository.updateTool({
+      where: { id },
+      data: {
+        brand: { connect: brand },
+        bundle: { connect: bundle },
+        inserted_at: insertedAt,
+        category: { connect: category },
+        name,
+        status,
+        wastage,
+      },
+    });
   }
 
   remove(id: number) {
-    return `This action removes a #${id} tool`;
+    return this.toolsRepository.deleteTool({ id });
   }
 }

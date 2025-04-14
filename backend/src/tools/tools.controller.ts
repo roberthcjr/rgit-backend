@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { ToolsService } from './tools.service';
 import { CreateToolDto } from './dto/create-tool.dto';
 import { UpdateToolDto } from './dto/update-tool.dto';
@@ -7,28 +16,34 @@ import { UpdateToolDto } from './dto/update-tool.dto';
 export class ToolsController {
   constructor(private readonly toolsService: ToolsService) {}
 
+  // TODO: Implements validation
   @Post()
   create(@Body() createToolDto: CreateToolDto) {
     return this.toolsService.create(createToolDto);
   }
 
+  //TODO: Implements pagination
   @Get()
   findAll() {
     return this.toolsService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.toolsService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.toolsService.findOne(id);
   }
 
+  //TODO: Implements validation to body
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateToolDto: UpdateToolDto) {
-    return this.toolsService.update(+id, updateToolDto);
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateToolDto: UpdateToolDto,
+  ) {
+    return this.toolsService.update(id, updateToolDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.toolsService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.toolsService.remove(id);
   }
 }
