@@ -19,4 +19,4 @@ COPY --from=build /app/dist /app/dist
 RUN npx prisma generate
 RUN pnpm add -g @nestjs/cli && pnpm add --save-dev @types/node
 EXPOSE 3000
-CMD [ "pnpm", "start:dev" ]
+CMD [ "pnpm", "start:migrate:dev" ]

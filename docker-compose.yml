@@ -11,12 +11,10 @@ services:
          build: 
              context: ./backend
          ports:
-             - "3000:3000"
+             - "8080:3000"
          environment:
-             - PORT=3000
-             - POSTGRES_USER=postgres
-             - POSTGRES_PASSWORD=postgres
-             - DATABASE_URL=postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@postgres:5433/postgres?schema=public
+             - PORT=8080
+             - DATABASE_URL=postgresql://postgres:postgres@database:5432/postgres?schema=public
          develop:
              watch:
                  - action: sync
