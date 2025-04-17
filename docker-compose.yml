@@ -7,21 +7,22 @@ services:
             - POSTGRES_USER=postgres
             - POSTGRES_PASSWORD=postgres
 
-    # backend:
-    #     build: 
-    #         context: ./backend
-    #     ports:
-    #         - "3000:3000"
-    #     environment:
-    #         - DATABASE_URL="postgresql://postgres:postgres@postgres:5432/postgres?schema=public"
-    #     develop:
-    #         watch:
-    #             - action: sync
-    #               path: ./backend/src
-    #               target: /usr/backend/src
-    #               ignore:
-    #                 - node_modules/
-    #             - action: rebuild
-    #               path: package.json
-    #     depends_on:
-    #         - database
+    backend:
+         build: 
+             context: ./backend
+         ports:
+             - "8080:3000"
+         environment:
+             - PORT=8080
+             - DATABASE_URL=postgresql://postgres:postgres@database:5432/postgres?schema=public
+         develop:
+             watch:
+                 - action: sync
+                   path: ./backend/src
+                   target: /app/src
+                   ignore:
+                     - node_modules/
+                 - action: rebuild
+                   path: package.json
+         depends_on:
+             - database
