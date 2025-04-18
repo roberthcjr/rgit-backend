@@ -13,7 +13,7 @@ services:
          ports:
              - "8080:3000"
          environment:
-             - PORT=8080
+             - PORT=3000
              - DATABASE_URL=postgresql://postgres:postgres@database:5432/postgres?schema=public
          develop:
              watch:
