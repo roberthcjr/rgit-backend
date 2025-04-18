@@ -53,4 +53,10 @@ export class ToolsRepository {
       where,
     });
   }
+
+  async createManyTools(data: Prisma.ToolCreateManyInput[]) {
+    return this.prisma.tool.createMany({
+      data,
+    });
+  }
 }

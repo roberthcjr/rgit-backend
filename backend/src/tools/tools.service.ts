@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateToolDto } from './dto/create-tool.dto';
 import { UpdateToolDto } from './dto/update-tool.dto';
 import { ToolsRepository } from './tools.repository/tools.repository';
+import csvParser from 'csv-parser';
 
 @Injectable()
 export class ToolsService {
@@ -46,5 +47,18 @@ export class ToolsService {
 
   remove(id: number) {
     return this.toolsRepository.deleteTool({ id });
+  }
+
+  insertCSV(file: Express.Multer.File) {
+    const tools: { name: string }[] = [];
+    return new Promise((resolve, reject) =>
+      file.stream
+        .on('error', (error) => reject(error))
+        .pipe(csvParser())
+        .on('data', (data) => tools.push(data))
+        .on('end', async () => {
+          resolve(this.toolsRepository.createManyTools(tools));
+        }),
+    );
   }
 }

@@ -50,11 +50,11 @@ model Tool {
   wastage Int? @db.SmallInt @default(0)
   status Tool_Status @default(AVAILABLE)
 
-  category Category @relation(fields: [categoryId], references: [id])
-  categoryId String
+  category Category? @relation(fields: [categoryId], references: [id])
+  categoryId String?
 
-  brand Brand @relation(fields: [brandId], references: [id])
-  brandId String
+  brand Brand? @relation(fields: [brandId], references: [id])
+  brandId String?
 
   bundle Bundle? @relation(fields: [bundleId], references: [id])
   bundleId String?

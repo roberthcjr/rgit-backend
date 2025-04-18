@@ -7,10 +7,14 @@ import {
   Param,
   Delete,
   ParseIntPipe,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { ToolsService } from './tools.service';
 import { CreateToolDto } from './dto/create-tool.dto';
 import { UpdateToolDto } from './dto/update-tool.dto';
+import { FileInterceptor } from '@nestjs/platform-express/multer';
+import { CsvValidationPipe } from './validator/csv.validator';
 
 @Controller('tools')
 export class ToolsController {
@@ -20,6 +24,12 @@ export class ToolsController {
   @Post()
   create(@Body() createToolDto: CreateToolDto) {
     return this.toolsService.create(createToolDto);
+  }
+
+  @Post('/importCSV')
+  @UseInterceptors(FileInterceptor('file'))
+  createCSV(@UploadedFile(CsvValidationPipe) file: Express.Multer.File) {
+    return this.toolsService.insertCSV(file);
   }
 
   //TODO: Implements pagination
