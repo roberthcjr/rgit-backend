@@ -1,14 +1,13 @@
 import {
   PipeTransform,
   Injectable,
-  ArgumentMetadata,
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
 
 @Injectable()
 export class CsvValidationPipe implements PipeTransform {
-  transform(value: any, metadata: ArgumentMetadata) {
+  transform(value: any) {
     if (!this.isAccetableSize(value))
       throw new HttpException(
         'File size greater than accepted',
