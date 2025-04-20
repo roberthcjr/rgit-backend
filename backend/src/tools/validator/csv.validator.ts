@@ -1,10 +1,33 @@
-import { PipeTransform, Injectable, ArgumentMetadata } from '@nestjs/common';
+import {
+  PipeTransform,
+  Injectable,
+  ArgumentMetadata,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 
 @Injectable()
 export class CsvValidationPipe implements PipeTransform {
   transform(value: any, metadata: ArgumentMetadata) {
+    if (!this.isAccetableSize(value))
+      throw new HttpException(
+        'File size greater than accepted',
+        HttpStatus.BAD_REQUEST,
+      );
+
+    if (!this.isAcetableType(value))
+      throw new HttpException('File type not accepted', HttpStatus.BAD_REQUEST);
+
+    return value;
+  }
+
+  isAccetableSize(value) {
     const fiveMb = 5 * 1024 * 1024;
+    return value.size < fiveMb;
+  }
+
+  isAcetableType(value) {
     const mimeType = 'text/csv';
-    return value.size < fiveMb && value.type === mimeType;
+    return value.mimetype === mimeType;
   }
 }
