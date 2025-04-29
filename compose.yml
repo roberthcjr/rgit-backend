@@ -3,18 +3,16 @@ services:
         image: postgres
         ports:
             - "5433:5432"
-        environment:
-            - POSTGRES_USER=postgres
-            - POSTGRES_PASSWORD=postgres
+        env_file:
+            - ./.env.development
 
     backend:
          build: 
              context: ./backend
          ports:
              - "8080:3000"
-         environment:
-             - PORT=3000
-             - DATABASE_URL=postgresql://postgres:postgres@database:5432/postgres?schema=public
+         env_file:
+             - ./.env.development
          develop:
              watch:
                  - action: sync
