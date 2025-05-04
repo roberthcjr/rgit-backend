@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateToolDto } from './dto/create-tool.dto';
 import { UpdateToolDto } from './dto/update-tool.dto';
-import { ToolsRepository } from './tools.repository/tools.repository';
+import { ToolsRepository } from './repository/tools.repository';
 import { Readable } from 'stream';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 import csv = require('csv-parser');
