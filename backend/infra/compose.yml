@@ -4,19 +4,19 @@ services:
         ports:
             - "5433:5432"
         env_file:
-            - ./.env.development
+            - ../.env.development
 
     backend:
          build: 
-             context: ./backend
+             context: ..
          ports:
              - "8080:3000"
          env_file:
-             - ./.env.development
+             - ../.env.development
          develop:
              watch:
                  - action: sync
-                   path: ./backend/src
+                   path: ../src
                    target: /app/src
                    ignore:
                      - node_modules/

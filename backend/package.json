@@ -10,7 +10,7 @@
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
-    "start:local": "dotenv -e ../.env -- nest start --watch",
+    "start:local": "dotenv -e .env -- nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "start:migrate:dev": "npx prisma migrate dev && pnpm start:dev",
@@ -20,10 +20,12 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "service:up": "docker compose -f ../compose.yml up -d",
-    "service:watch": "docker compose -f ../compose.yml up --watch",
-    "service:stop": "docker compose -f ../compose.yml stop",
-    "service:down": "docker compose -f ../compose.yml down"
+    "test:e2e:watch": "dotenv -e .env -- jest --config ./test/jest-e2e.json --watch",
+    "service:up": "docker compose -f ./infra/compose.yml up -d",
+    "service:watch": "docker compose -f ./infra/compose.yml up --watch",
+    "service:stop": "docker compose -f ./infra/compose.yml stop",
+    "service:down": "docker compose -f ./infra/compose.yml down",
+    "dir":"ls ./infra"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
@@ -77,5 +79,8 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
+  },
+  "prisma": {
+    "schema": "infra/prisma/schema.prisma"
   }
 }
