@@ -2,17 +2,32 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from 'src/app.module';
+import { PrismaModule } from 'src/prisma/prisma.module';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { randomUUID } from 'crypto';
 
 describe('Login', () => {
   let app: INestApplication;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
+      imports: [AppModule, PrismaModule],
     }).compile();
 
     app = moduleFixture.createNestApplication();
     await app.init();
+    const prisma = new PrismaService();
+    await prisma.user.create({
+      data: {
+        id: randomUUID(),
+        name: 'robert',
+        surname: 'robert',
+        job: 'dev',
+        section: 'dev',
+        username: 'robert',
+        password: 'password',
+      },
+    });
   });
 
   it('/auth/login (POST), should return 404 when wrong username', () => {
@@ -40,7 +55,7 @@ describe('Login', () => {
       .post('/auth/login')
       .send({
         username: 'robert',
-        password: 'senhaCorreta',
+        password: 'password',
       })
       .expect(200);
   });
@@ -50,7 +65,7 @@ describe('Login', () => {
       .post('/auth/login')
       .send({
         username: 'robert',
-        password: 'senhaCorreta',
+        password: 'password',
       });
 
     const responseBody = response.body;
