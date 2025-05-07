@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { AppModule } from './../src/app.module';
+import { AppModule } from '../src/app.module';
 
 describe('Integration tests', () => {
   let app: INestApplication;
@@ -19,14 +19,14 @@ describe('Integration tests', () => {
     return request(app.getHttpServer())
       .get('/')
       .expect(200)
-      .expect('Hello World!');
+      .expect('Hello Robert!');
   });
 
   it('/auth/login (POST), should return 404 when wrong username', () => {
     return request(app.getHttpServer())
       .post('/auth/login')
       .send({
-        username: 'robert',
+        username: 'qualquer',
         password: 'anypass',
       })
       .expect(404);
@@ -36,7 +36,7 @@ describe('Integration tests', () => {
     return request(app.getHttpServer())
       .post('/auth/login')
       .send({
-        username: 'correctUser',
+        username: 'robert',
         password: '123123',
       })
       .expect(401);
@@ -46,8 +46,8 @@ describe('Integration tests', () => {
     return request(app.getHttpServer())
       .post('/auth/login')
       .send({
-        username: 'correctUser',
-        password: 'correctPass',
+        username: 'robert',
+        password: 'senhaCorreta',
       })
       .expect(200);
   });
@@ -56,8 +56,8 @@ describe('Integration tests', () => {
     const response = await request(app.getHttpServer())
       .post('/auth/login')
       .send({
-        username: 'correctUser',
-        password: 'correctPass',
+        username: 'robert',
+        password: 'senhaCorreta',
       });
 
     const responseBody = response.body;
@@ -69,8 +69,8 @@ describe('Integration tests', () => {
     const loginResponse = await request(app.getHttpServer())
       .post('/auth/login')
       .send({
-        username: 'correctUser',
-        password: 'correctPass',
+        username: 'robert',
+        password: 'senhaCorreta',
       });
 
     const token = loginResponse.body.access_token;
@@ -82,6 +82,6 @@ describe('Integration tests', () => {
   });
 
   it('/tools (GET), should return 401 when acessing protected route without correct token', async () => {
-    return request(app.getHttpServer()).get('/tools').expect(200);
+    return request(app.getHttpServer()).get('/tools').expect(401);
   });
 });
