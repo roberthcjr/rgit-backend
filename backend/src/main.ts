@@ -10,6 +10,7 @@ async function bootstrap() {
     .setDescription('The tools management system')
     .setVersion('1.0')
     .addTag('tools')
+    .addBearerAuth()
     .build();
 
   const documentFactory = () => SwaggerModule.createDocument(app, config);
