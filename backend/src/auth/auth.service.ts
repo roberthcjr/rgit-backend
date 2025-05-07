@@ -1,5 +1,4 @@
 import {
-  HttpException,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -7,7 +6,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
 import { UsersRepository } from 'src/users/users.repository';
-import { JwtDTO } from './dtos/jwt.dto';
+import { JwtDto } from './dtos/jwt.dto';
 
 @Injectable()
 export class AuthService {
@@ -31,7 +30,7 @@ export class AuthService {
     return result;
   }
 
-  async login(user: any): Promise<JwtDTO> {
+  async login(user: any): Promise<JwtDto> {
     const payload = { username: user.username, sub: user.id };
     return {
       access_token: this.jwtService.sign(payload),
