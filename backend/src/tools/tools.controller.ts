@@ -54,6 +54,9 @@ export class ToolsController {
   @ApiBadRequestResponse({
     description: 'Wrong type of file or to much size',
   })
+  @ApiCreatedResponse({
+    description: 'Tools imported',
+  })
   @Post('/importCSV')
   @UseInterceptors(FileInterceptor('file'))
   createCSV(@UploadedFile(CsvValidationPipe) file: Express.Multer.File) {
@@ -69,6 +72,9 @@ export class ToolsController {
     return this.toolsService.findAll();
   }
 
+  @ApiOkResponse({
+    description: 'Tool requested',
+  })
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.toolsService.findOne(id);
@@ -76,6 +82,9 @@ export class ToolsController {
 
   //TODO: Implements validation to body
   @ApiBody({ description: 'Changes tools infos', type: UpdateToolDto })
+  @ApiOkResponse({
+    description: 'Tool updated',
+  })
   @Patch(':id')
   update(
     @Param('id', ParseIntPipe) id: number,
@@ -84,6 +93,9 @@ export class ToolsController {
     return this.toolsService.update(id, updateToolDto);
   }
 
+  @ApiOkResponse({
+    description: 'Tool deleted',
+  })
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.toolsService.remove(id);
