@@ -17,6 +17,7 @@ model User {
   id String @id @default(uuid())
   name String @db.VarChar(50)
   surname String? @db.VarChar(100)
+  username String @db.VarChar(50)
   password String
   job String @db.VarChar(50)
   section String @db.VarChar(50)
