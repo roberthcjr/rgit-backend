@@ -4,4 +4,9 @@ dist
 *.md
 .git
 
-*/.env
+.env*
+
+test
+infra/compose*
+infra/Dockerfile
+
