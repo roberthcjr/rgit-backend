@@ -4,7 +4,7 @@ services:
         ports:
             - "5433:5432"
         env_file:
-            - ../.env.development
+            - ../.env.docker
 
     backend:
          build: 
@@ -12,7 +12,7 @@ services:
          ports:
              - "8080:3000"
          env_file:
-             - ../.env.development
+             - ../.env.docker
          develop:
              watch:
                  - action: sync
