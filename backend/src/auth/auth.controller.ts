@@ -8,8 +8,8 @@ import {
   ApiOkResponse,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { JwtDTO } from './dtos/jwt.dto';
-import { CredentialsLoginDTO } from './dtos/login.dto';
+import { JwtDto } from './dtos/jwt.dto';
+import { CredentialsLoginDto } from './dtos/login.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -17,19 +17,19 @@ export class AuthController {
 
   @ApiOkResponse({
     description: 'Successfully logged in.',
-    type: JwtDTO,
+    type: JwtDto,
   })
   @ApiUnauthorizedResponse({ description: 'Wrong password.' })
   @ApiNotFoundResponse({ description: 'User not found.' })
   @ApiBody({
     description: 'Login credentials',
-    type: CredentialsLoginDTO,
+    type: CredentialsLoginDto,
   })
   @HttpCode(200)
   @Public()
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(@Request() req): Promise<JwtDTO> {
+  async login(@Request() req): Promise<JwtDto> {
     return this.authService.login(req.user);
   }
 }
