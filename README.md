@@ -61,3 +61,19 @@ yarn run service:stop
  yarn run service:down
  ```
  respectivamente, para parar e remover o container.
+
+ 
+:warning: **Para rodar apenas localmente sem `Docker`**: Copie o conteúdo de .env.test para um .env e utilize um dos comandos:
+
+ ```bash
+ npm run start #Modo prod
+ npm run start:dev #Modo dev
+ ```
+ ```bash
+ pnpm run start #Modo prod
+ pnpm run start:dev #Modo dev
+ ```
+ ```bash
+ yarn run start #Modo prod
+ yarn run start:dev #Modo dev
+ ```
