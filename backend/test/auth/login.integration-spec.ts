@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { AppModule } from '../src/app.module';
+import { AppModule } from 'src/app.module';
 
-describe('Integration tests', () => {
+describe('Login', () => {
   let app: INestApplication;
 
   beforeEach(async () => {
@@ -13,13 +13,6 @@ describe('Integration tests', () => {
 
     app = moduleFixture.createNestApplication();
     await app.init();
-  });
-
-  it('/ (GET)', () => {
-    return request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect('Hello Robert!');
   });
 
   it('/auth/login (POST), should return 404 when wrong username', () => {
@@ -63,25 +56,5 @@ describe('Integration tests', () => {
     const responseBody = response.body;
 
     expect(responseBody.access_token).toBeDefined();
-  });
-
-  it('/tools (GET), should return 200 when acessing protected route with correct token', async () => {
-    const loginResponse = await request(app.getHttpServer())
-      .post('/auth/login')
-      .send({
-        username: 'robert',
-        password: 'senhaCorreta',
-      });
-
-    const token = loginResponse.body.access_token;
-
-    return request(app.getHttpServer())
-      .get('/tools')
-      .set('Authorization', `Bearer ${token}`)
-      .expect(200);
-  });
-
-  it('/tools (GET), should return 401 when acessing protected route without correct token', async () => {
-    return request(app.getHttpServer()).get('/tools').expect(401);
   });
 });
