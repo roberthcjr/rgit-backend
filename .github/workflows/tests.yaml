@@ -2,6 +2,10 @@ name: Automated Tests
 
 on: pull_request
 
+defaults:
+  run:
+    working-directory: backend/
+
 jobs:
   integration:
     name: Integration Tests
@@ -9,7 +13,6 @@ jobs:
     strategy:
       matrix:
         node-version: [22]
-        working-dir: backend/
     steps:
       - uses: actions/checkout@v4
 
@@ -17,19 +20,15 @@ jobs:
         uses: pnpm/action-setup@v4
         with:
           version: 10
-        cwd: ${{ matrix.working-dir }}
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: "pnpm"
-        cwd: ${{ matrix.working-dir }}
 
       - name: Install dependencies
         run: pnpm install
-        cwd: ${{ matrix.working-dir }}
 
       - name: Runs Integration Tests
         run: pnpm run test:integration
-        cwd: ${{ matrix.working-dir }}
