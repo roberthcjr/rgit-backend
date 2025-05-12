@@ -1,26 +1,28 @@
 services:
-    database:
-        image: postgres:17.4-alpine3.21
-        ports:
-            - "5433:5432"
-        env_file:
-            - ../.env.docker
+  database:
+    container_name: 'database'
+    image: postgres:17.4-alpine3.21
+    ports:
+      - '5433:5432'
+    env_file:
+      - ../.env.docker
 
-    backend:
-         build: 
-             context: ..
-         ports:
-             - "8080:3000"
-         env_file:
-             - ../.env.docker
-         develop:
-             watch:
-                 - action: sync
-                   path: ../src
-                   target: /app/src
-                   ignore:
-                     - node_modules/
-                 - action: rebuild
-                   path: package.json
-         depends_on:
-             - database
+  backend:
+    container_name: 'backend'
+    build:
+      context: ..
+    ports:
+      - '8080:3000'
+    env_file:
+      - ../.env.docker
+    develop:
+      watch:
+        - action: sync
+          path: ../src
+          target: /app/src
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: package.json
+    depends_on:
+      - database
