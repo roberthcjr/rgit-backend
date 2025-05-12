@@ -37,7 +37,7 @@ describe('Login', () => {
         username: 'qualquer',
         password: 'anypass',
       })
-      .expect(404);
+      .expect(402);
   });
 
   it('/auth/login (POST), should return 401 when wrong password', () => {
