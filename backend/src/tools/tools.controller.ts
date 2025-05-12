@@ -9,6 +9,8 @@ import {
   ParseIntPipe,
   UseInterceptors,
   UploadedFile,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { ToolsService } from './tools.service';
 import { CreateToolDto } from './dto/create-tool.dto';
@@ -42,6 +44,7 @@ export class ToolsController {
     description: 'Wrong tools info',
   })
   @Post()
+  @UsePipes(new ValidationPipe())
   create(@Body() createToolDto: CreateToolDto) {
     return this.toolsService.create(createToolDto);
   }
@@ -86,6 +89,7 @@ export class ToolsController {
     description: 'Tool updated',
   })
   @Patch(':id')
+  @UsePipes(new ValidationPipe())
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateToolDto: UpdateToolDto,
