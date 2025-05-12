@@ -2,14 +2,13 @@ name: Automated Tests
 
 on: pull_request
 
-defaults:
-  run:
-    working-directory: ./backend
-
 jobs:
   integration:
     name: Integration Tests
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
     strategy:
       matrix:
         node-version: [22]
