@@ -16,11 +16,6 @@ export class AuthService {
   ) {}
 
   async validateUser(username: string, pass: string): Promise<any> {
-    let test;
-
-    
-    
-    
     const usersFound: User[] = await this.usersRepository.users({
       where: { username },
     });
