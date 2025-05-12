@@ -6,9 +6,6 @@ jobs:
   integration:
     name: Integration Tests
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./backend
     strategy:
       matrix:
         node-version: [22]
@@ -19,15 +16,19 @@ jobs:
         uses: pnpm/action-setup@v4
         with:
           version: 10
+        working-directory: ./backend
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: "pnpm"
+        working-directory: ./backend
 
       - name: Install dependencies
         run: pnpm install
+        working-directory: ./backend
 
       - name: Runs Integration Tests
         run: pnpm run test:integration
+        working-directory: ./backend
