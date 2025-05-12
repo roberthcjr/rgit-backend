@@ -2,10 +2,6 @@ name: Automated Tests
 
 on: pull_request
 
-defaults:
-  run:
-    working-directory: ./backend
-
 jobs:
   integration:
     name: Integration Tests
@@ -29,6 +25,8 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
+        working-directory: ./backend
 
       - name: Runs Integration Tests
         run: pnpm run test:integration
+        working-directory: ./backend
