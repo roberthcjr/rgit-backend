@@ -30,7 +30,8 @@
     "service:database:up": "docker compose -f ./infra/compose.yml up -d database",
     "wait-for-postgres": "node ./infra/scripts/wait-for-postgres.js",
     "migrate": "npx prisma migrate dev",
-    "prepare": "cd .. && husky"
+    "prepare": "cd .. && husky",
+    "commit": "cz"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
@@ -64,6 +65,8 @@
     "@types/supertest": "^6.0.0",
     "@typescript-eslint/eslint-plugin": "^8.0.0",
     "@typescript-eslint/parser": "^8.0.0",
+    "commitizen": "^4.3.1",
+    "cz-conventional-changelog": "^3.3.0",
     "dotenv-cli": "^8.0.0",
     "eslint": "^8.0.0",
     "eslint-config-prettier": "^9.0.0",
@@ -99,5 +102,10 @@
   },
   "prisma": {
     "schema": "infra/prisma/schema.prisma"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./backend/node_modules/cz-conventional-changelog"
+    }
   }
 }
