@@ -61,6 +61,8 @@ model Tool {
   bundle Bundle? @relation(fields: [bundleId], references: [id])
   bundleId String?
 
+  externalId String?
+
   Lend Lend[]
 }
 
