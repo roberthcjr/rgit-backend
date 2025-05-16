@@ -3,10 +3,12 @@ dist
 *.log
 *.md
 .git
-
 .env*
+
+pnpm-lock*
 
 test
 infra/compose*
-infra/Dockerfile
+
+
 
