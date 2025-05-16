@@ -8,4 +8,6 @@ export class CreateToolDto {
   category?: Category;
   @ApiPropertyOptional()
   brand?: Brand;
+  @ApiPropertyOptional()
+  externalId?: string;
 }
