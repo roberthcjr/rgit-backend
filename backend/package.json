@@ -30,7 +30,7 @@
     "service:database:up": "docker compose -f ./infra/compose.yml up -d database",
     "wait-for-postgres": "node ./infra/scripts/wait-for-postgres.js",
     "migrate": "npx prisma migrate dev",
-    "prepare": "cd .. && husky install backend/.husky",
+    "prepare": "cd .. && husky backend/.husky",
     "commit": "cz"
   },
   "dependencies": {
