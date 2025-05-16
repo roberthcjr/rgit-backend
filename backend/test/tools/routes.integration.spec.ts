@@ -5,6 +5,7 @@ import { AppModule } from 'src/app.module';
 import { PrismaModule } from 'src/prisma/prisma.module';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { randomUUID } from 'crypto';
+import { vol } from 'memfs';
 
 describe('Tools Routes', () => {
   let app: INestApplication;
@@ -132,6 +133,106 @@ describe('Tools Routes', () => {
           })
           .set('Authorization', `Bearer ${token}`)
           .expect(404);
+      });
+    });
+
+    describe('[POST] /tools/importCSV', () => {
+      beforeEach(() => {
+        vol.reset();
+      });
+      it('should return created and the expected number of tools created', async () => {
+        const baseContent = 'name\nToolA\nToolB\n';
+
+        vol.fromJSON(
+          {
+            './tools.csv': baseContent,
+          },
+          '/mock',
+        );
+
+        const buffer = vol.readFileSync('/mock/tools.csv');
+        const response = await request(app.getHttpServer())
+          .post('/tools/importCSV')
+          .attach('file', buffer, {
+            filename: 'tools.csv',
+            contentType: 'text/csv',
+          })
+          .set('Authorization', `Bearer ${token}`);
+
+        expect(response.body.count).toBe(2);
+        expect(response.status).toBe(201);
+      });
+
+      it('should return created and the expected number of tools created when passing externalId', async () => {
+        const baseContent = 'name,externalId\nToolA,1231231\nToolB,2132312\n';
+
+        vol.fromJSON(
+          {
+            './tools.csv': baseContent,
+          },
+          '/mock',
+        );
+
+        const buffer = vol.readFileSync('/mock/tools.csv');
+        const response = await request(app.getHttpServer())
+          .post('/tools/importCSV')
+          .attach('file', buffer, {
+            filename: 'tools.csv',
+            contentType: 'text/csv',
+          })
+          .set('Authorization', `Bearer ${token}`);
+
+        expect(response.body.count).toBe(2);
+        expect(response.status).toBe(201);
+      });
+
+      it('should return bad request when wrong type', async () => {
+        const baseContent = 'name\nToolA\nToolB\n';
+
+        vol.fromJSON(
+          {
+            './tools.pdf': baseContent,
+          },
+          '/mock',
+        );
+
+        const buffer = vol.readFileSync('/mock/tools.pdf');
+        const response = await request(app.getHttpServer())
+          .post('/tools/importCSV')
+          .attach('file', buffer, {
+            filename: 'tools.pdf',
+            contentType: 'text/pdf',
+          })
+          .set('Authorization', `Bearer ${token}`);
+
+        expect(response.status).toBe(400);
+      });
+
+      it('should return bad request when file size bigger than 5Mb', async () => {
+        const baseContent = 'name\nToolA\nToolB\n';
+        const targetSize = 6 * 1024 * 1024; // 6Mb
+        const padding = 'ExtraLine\n'.repeat(
+          (targetSize - baseContent.length) / 'ExtraLine\n'.length,
+        );
+        const csvContent = baseContent + padding;
+
+        vol.fromJSON(
+          {
+            './tools.csv': csvContent,
+          },
+          '/mock',
+        );
+
+        const buffer = vol.readFileSync('/mock/tools.csv');
+        const response = await request(app.getHttpServer())
+          .post('/tools/importCSV')
+          .attach('file', buffer, {
+            filename: 'tools.csv',
+            contentType: 'text/csv',
+          })
+          .set('Authorization', `Bearer ${token}`);
+
+        expect(response.status).toBe(400);
       });
     });
 

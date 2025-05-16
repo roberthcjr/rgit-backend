@@ -74,13 +74,15 @@ export class ToolsService {
   }
 
   insertCSV(file: Express.Multer.File) {
-    const tools: { name: string }[] = [];
+    const tools: { name: string; externalId?: string }[] = [];
     const readableStream = Readable.from(file.buffer);
     return new Promise((resolve, reject) =>
       readableStream
         .on('error', (error) => reject(error))
         .pipe(csv())
-        .on('data', (data) => tools.push(data))
+        .on('data', (data) => {
+          tools.push(data);
+        })
         .on('end', async () => {
           resolve(this.toolsRepository.createManyTools(tools));
         }),
