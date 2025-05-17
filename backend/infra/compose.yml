@@ -11,6 +11,7 @@ services:
     container_name: 'backend'
     build:
       context: ..
+      dockerfile: Dockerfile-dev
     ports:
       - '8080:3000'
     env_file:
