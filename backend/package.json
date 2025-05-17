@@ -7,7 +7,7 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "build": "npx prisma generate && nest build",
+    "build": "pnpm run generate && nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
@@ -20,7 +20,8 @@
     "service:down": "docker compose -f ./infra/compose.yml down",
     "service:database:up": "docker compose -f ./infra/compose.yml up -d database",
     "service:wait:database": "node ./infra/scripts/wait-for-postgres.js",
-    "migrate": "npx prisma migrate dev",
+    "generate": "prisma generate",
+    "migrate": "prisma migrate dev",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
