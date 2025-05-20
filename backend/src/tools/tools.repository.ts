@@ -28,6 +28,7 @@ export class ToolsRepository {
       cursor,
       where,
       orderBy,
+      include: { brand: true, category: true },
     });
   }
 
