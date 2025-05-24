@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Brand, Category } from '@prisma/client';
+import { Brand, Category, Tool_Status } from '@prisma/client';
 
 export class CreateToolDto {
   @ApiProperty()
@@ -10,4 +10,6 @@ export class CreateToolDto {
   brand?: Brand;
   @ApiPropertyOptional()
   externalId?: string;
+  @ApiPropertyOptional({ enum: Tool_Status })
+  status?: Tool_Status;
 }
