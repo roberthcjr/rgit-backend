@@ -9,7 +9,6 @@ import {
   ParseIntPipe,
   UseInterceptors,
   UploadedFile,
-  UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import { ToolsService } from './tools.service';
@@ -44,8 +43,7 @@ export class ToolsController {
     description: 'Wrong tools info',
   })
   @Post()
-  @UsePipes(new ValidationPipe())
-  create(@Body() createToolDto: CreateToolDto) {
+  create(@Body(ValidationPipe) createToolDto: CreateToolDto) {
     return this.toolsService.create(createToolDto);
   }
 
@@ -89,10 +87,9 @@ export class ToolsController {
     description: 'Tool updated',
   })
   @Patch(':id')
-  @UsePipes(new ValidationPipe())
   update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() updateToolDto: UpdateToolDto,
+    @Body(ValidationPipe) updateToolDto: UpdateToolDto,
   ) {
     return this.toolsService.update(id, updateToolDto);
   }
