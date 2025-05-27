@@ -6,30 +6,33 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "build": "nest build",
+    "build": "pnpm run generate && nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "start:migrate:dev": "pnpm run migrate && pnpm start:dev",
-    "lint:eslint:check": "eslint \"{src,apps,libs,test,infra}/**/*.ts\"",
-    "lint:eslint:fix": "eslint \"{src,apps,libs,test,infra}/**/*.ts\" --fix",
-    "lint:prettier:check": "prettier --check .",
-    "lint:prettier:format": "prettier --write .",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:cov": "jest --coverage",
-    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:integration": "pnpm run service:database:up && pnpm run wait-for-postgres && dotenv -e .env.test -- pnpm run migrate && dotenv -e .env.test -- npx prisma generate && dotenv -e .env.test -- jest --config ./test/jest-integration.json",
-    "test:integration:watch": "dotenv -e .env.test -- jest --config ./test/jest-integration.json --watch",
     "service:up": "docker compose -f ./infra/compose.yml up -d",
     "service:watch": "docker compose -f ./infra/compose.yml up --watch",
     "service:stop": "docker compose -f ./infra/compose.yml stop",
     "service:down": "docker compose -f ./infra/compose.yml down",
     "service:database:up": "docker compose -f ./infra/compose.yml up -d database",
-    "wait-for-postgres": "node ./infra/scripts/wait-for-postgres.js",
-    "migrate": "npx prisma migrate dev"
+    "service:wait:database": "node ./infra/scripts/wait-for-postgres.js",
+    "generate": "prisma generate",
+    "migrate": "prisma migrate dev",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:cov": "jest --coverage",
+    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "test:integration": "pnpm run service:database:up && pnpm run service:wait:database && dotenv -e .env.test -- pnpm run migrate && dotenv -e .env.test -- npx prisma generate && dotenv -e .env.test -- jest --config ./test/jest-integration.json --verbose",
+    "test:integration:watch": "pnpm run test:integration --watch",
+    "lint:eslint:check": "eslint \"{src,apps,libs,test,infra}/**/*.ts\"",
+    "lint:eslint:fix": "eslint \"{src,apps,libs,test,infra}/**/*.ts\" --fix",
+    "lint:prettier:check": "prettier --check .",
+    "lint:prettier:format": "prettier --write .",
+    "prepare": "cd .. && husky backend/.husky",
+    "commit": "cz"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
@@ -51,6 +54,8 @@
     "rxjs": "^7.8.1"
   },
   "devDependencies": {
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
     "@nestjs/cli": "^10.0.0",
     "@nestjs/schematics": "^10.0.0",
     "@nestjs/testing": "^10.0.0",
@@ -63,11 +68,15 @@
     "@types/supertest": "^6.0.0",
     "@typescript-eslint/eslint-plugin": "^8.0.0",
     "@typescript-eslint/parser": "^8.0.0",
+    "commitizen": "^4.3.1",
+    "cz-conventional-changelog": "^3.3.0",
     "dotenv-cli": "^8.0.0",
     "eslint": "^8.0.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",
+    "husky": "^9.1.7",
     "jest": "^29.5.0",
+    "memfs": "^4.17.2",
     "prettier": "^3.0.0",
     "prisma": "^6.3.1",
     "source-map-support": "^0.5.21",
@@ -97,5 +106,10 @@
   },
   "prisma": {
     "schema": "infra/prisma/schema.prisma"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./backend/node_modules/cz-conventional-changelog"
+    }
   }
 }

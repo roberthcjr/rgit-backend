@@ -19,4 +19,6 @@ export class CreateToolDto {
   @IsOptional()
   @IsNotEmpty()
   brand?: Brand;
+  @ApiPropertyOptional()
+  externalId?: string;
 }

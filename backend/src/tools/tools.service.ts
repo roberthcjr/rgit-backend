@@ -5,19 +5,41 @@ import { ToolsRepository } from './tools.repository';
 import { Readable } from 'stream';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 import csv = require('csv-parser');
+import { randomUUID } from 'crypto';
 
+// TODO: review the logic to create brand and category when it does not exist
 @Injectable()
 export class ToolsService {
   constructor(private toolsRepository: ToolsRepository) {}
-  create(createToolDto: CreateToolDto) {
-    const { name, brand, category } = createToolDto;
+  create({
+    name,
+    brand: { id: brandId, name: brandName },
+    category: { id: categoryId, name: categoryName },
+  }: CreateToolDto) {
     return this.toolsRepository.createTool({
       name,
       brand: {
-        connect: brand,
+        connectOrCreate: {
+          where: {
+            id: brandId ?? randomUUID(),
+          },
+          create: {
+            name: brandName,
+            waste_rate: 1,
+            id: randomUUID(),
+          },
+        },
       },
       category: {
-        connect: category,
+        connectOrCreate: {
+          where: {
+            id: categoryId ?? randomUUID(),
+          },
+          create: {
+            id: randomUUID(),
+            name: categoryName,
+          },
+        },
       },
     });
   }
@@ -52,13 +74,15 @@ export class ToolsService {
   }
 
   insertCSV(file: Express.Multer.File) {
-    const tools: { name: string }[] = [];
+    const tools: { name: string; externalId?: string }[] = [];
     const readableStream = Readable.from(file.buffer);
     return new Promise((resolve, reject) =>
       readableStream
         .on('error', (error) => reject(error))
         .pipe(csv())
-        .on('data', (data) => tools.push(data))
+        .on('data', (data) => {
+          tools.push(data);
+        })
         .on('end', async () => {
           resolve(this.toolsRepository.createManyTools(tools));
         }),
