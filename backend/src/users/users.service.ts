@@ -40,21 +40,25 @@ export class UsersService {
     return this.usersRepository.user({ id });
   }
 
-  update(
+  async update(
     id: string,
     { name, surname, username, password, job, section }: UpdateUserDto,
   ) {
-    return this.usersRepository.updateUser({
-      where: { id },
-      data: {
-        name,
-        surname,
-        username,
-        password,
-        job,
-        section,
-      },
-    });
+    const hashedPassword = await this.hashService.hash(password);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password: _, ...updatedUser } =
+      await this.usersRepository.updateUser({
+        where: { id },
+        data: {
+          name,
+          surname,
+          username,
+          password: hashedPassword,
+          job,
+          section,
+        },
+      });
+    return updatedUser;
   }
 
   remove(id: string) {
