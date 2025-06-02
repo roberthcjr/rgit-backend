@@ -5,6 +5,7 @@ import { AppModule } from 'src/app.module';
 import { PrismaModule } from 'src/prisma/prisma.module';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { randomUUID } from 'crypto';
+import { HashService } from 'src/hash/hash.service';
 
 describe('Users Routes', () => {
   let app: INestApplication;
@@ -118,6 +119,57 @@ describe('Users Routes', () => {
           })
           .set('Authorization', `Bearer ${token}`)
           .expect(201);
+      });
+
+      it('should return a body without password', async () => {
+        const user = {
+          name: 'mockName',
+          surname: 'MockSurname',
+          job: 'mock',
+          section: 'mock',
+          username: 'mockusername',
+          password: 'mockpassword',
+        };
+        const response = await request(app.getHttpServer())
+          .post('/users')
+          .send(user)
+          .set('Authorization', `Bearer ${token}`);
+
+        const { password, ...expectedResponse } = user;
+
+        expect(response.body).toEqual({
+          id: response.body.id,
+          ...expectedResponse,
+        });
+      });
+
+      it('should create a hash in password', async () => {
+        const user = {
+          name: 'mockName',
+          surname: 'MockSurname',
+          job: 'mock',
+          section: 'mock',
+          username: 'mockusername',
+          password: 'mockpassword',
+        };
+        const hashService = new HashService();
+        const response = await request(app.getHttpServer())
+          .post('/users')
+          .send(user)
+          .set('Authorization', `Bearer ${token}`);
+
+        const userInserted = await prisma.user.findFirst({
+          where: {
+            id: response.body.id,
+          },
+        });
+
+        const isHashEqual = hashService.compare(
+          user.password,
+          userInserted.password,
+        );
+
+        expect(isHashEqual).toBeTruthy();
       });
 
       it.skip('with incorrect body, should return bad request', async () => {
