@@ -6,6 +6,7 @@ import { PrismaModule } from 'src/prisma/prisma.module';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { randomUUID } from 'crypto';
 import { vol } from 'memfs';
+import { HashService } from 'src/hash/hash.service';
 
 describe('Tools Routes', () => {
   let app: INestApplication;
@@ -19,6 +20,9 @@ describe('Tools Routes', () => {
     app = moduleFixture.createNestApplication();
     await app.init();
     prisma = new PrismaService();
+    const hashService = new HashService();
+    await prisma.user.deleteMany();
+    const hashedPassword = await hashService.hash('password');
     await prisma.user.create({
       data: {
         id: randomUUID(),
@@ -27,7 +31,7 @@ describe('Tools Routes', () => {
         job: 'dev',
         section: 'dev',
         username: 'robert',
-        password: 'password',
+        password: hashedPassword,
       },
     });
   });
@@ -244,13 +248,22 @@ describe('Tools Routes', () => {
           name: 'MockedPatchTool',
         },
       });
-      return request(app.getHttpServer())
+      const response = await request(app.getHttpServer())
         .patch(`/tools/${patchId}`)
         .send({
           name: 'MockedPatchedTool',
+          status: 'LENDED',
         })
-        .set('Authorization', `Bearer ${token}`)
-        .expect(200);
+        .set('Authorization', `Bearer ${token}`);
+      const patchedTool = await prisma.tool.findUnique({
+        where: {
+          id: patchId,
+        },
+      });
+      expect(response.body).toEqual({
+        ...patchedTool,
+        inserted_at: response.body.inserted_at,
+      });
     });
 
     it('[DELETE] /tools, should return success', async () => {
