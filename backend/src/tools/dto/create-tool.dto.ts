@@ -1,6 +1,9 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Brand, Category } from '@prisma/client';
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString, ValidateIf, ValidateNested } from 'class-validator';
+import { BrandDto } from './brand.dto';
+import { Type } from 'class-transformer';
+import { CategoryDto } from './category.dto';
 
 export class CreateToolDto {
   @ApiProperty()
@@ -8,17 +11,21 @@ export class CreateToolDto {
   @IsNotEmpty()
   name: string;
 
- /*These properties (category, brand, bundle) should only receive the id and not the entire prisma model, so that in the ToolsService class the connect only receives the id to make the relation
- And so it can be validated as well*/
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsNotEmpty()
-  category?: Category;
+  @ApiPropertyOptional({ type: () => CategoryDto })
+  @ValidateIf((o) => o.category !== undefined && o.category !== null)
+  @ValidateNested()
+  @Type(() => CategoryDto)
+  category?: CategoryDto;
+
+  @ApiPropertyOptional({ type: () => BrandDto })
+  @ValidateIf((o) => o.brand !== undefined && o.brand !== null)
+  @ValidateNested()
+  @Type(() => BrandDto)
+  brand?: BrandDto;
 
   @ApiPropertyOptional()
   @IsOptional()
   @IsNotEmpty()
-  brand?: Brand;
-  @ApiPropertyOptional()
+  @IsString()
   externalId?: string;
 }

@@ -31,7 +31,6 @@ import { ImportCsvDto } from './dto/import-csv.dto';
 export class ToolsController {
   constructor(private readonly toolsService: ToolsService) {}
 
-  // TODO: Implements validation
   @ApiBody({
     description: 'Tools info to be created',
     type: CreateToolDto,
@@ -81,7 +80,6 @@ export class ToolsController {
     return this.toolsService.findOne(id);
   }
 
-  //TODO: Implements validation to body
   @ApiBody({ description: 'Changes tools infos', type: UpdateToolDto })
   @ApiOkResponse({
     description: 'Tool updated',

@@ -10,39 +10,41 @@ import { randomUUID } from 'crypto';
 // TODO: review the logic to create brand and category when it does not exist
 @Injectable()
 export class ToolsService {
-  constructor(private toolsRepository: ToolsRepository) {}
-  create({
+  constructor(private toolsRepository: ToolsRepository) { }
+  create(createToolDto: CreateToolDto) {
+  const {
     name,
-    brand: { id: brandId, name: brandName },
-    category: { id: categoryId, name: categoryName },
-  }: CreateToolDto) {
-    return this.toolsRepository.createTool({
-      name,
+    brand,
+    category,
+  } = createToolDto;
+
+  return this.toolsRepository.createTool({
+    name,
+    ...(brand && brand.id && brand.name && {
       brand: {
         connectOrCreate: {
-          where: {
-            id: brandId ?? randomUUID(),
-          },
+          where: { id: brand.id },
           create: {
-            name: brandName,
+            id: brand.id,
+            name: brand.name,
             waste_rate: 1,
-            id: randomUUID(),
           },
         },
       },
+    }),
+    ...(category && category.id && category.name && {
       category: {
         connectOrCreate: {
-          where: {
-            id: categoryId ?? randomUUID(),
-          },
+          where: { id: category.id },
           create: {
-            id: randomUUID(),
-            name: categoryName,
+            id: category.id,
+            name: category.name,
           },
         },
       },
-    });
-  }
+    }),
+  });
+}
 
   findAll() {
     return this.toolsRepository.tools({});
@@ -53,21 +55,60 @@ export class ToolsService {
   }
 
   update(id: number, updateToolDto: UpdateToolDto) {
-    const { brand, bundle, insertedAt, category, name, status, wastage } =
-      updateToolDto;
-    return this.toolsRepository.updateTool({
-      where: { id },
-      data: {
-        brand: { connect: brand },
-        bundle: { connect: bundle },
-        inserted_at: insertedAt,
-        category: { connect: category },
-        name,
-        status,
-        wastage,
-      },
-    });
-  }
+  const {
+    name,
+    brand,
+    category,
+    bundle,
+    insertedAt,
+    status,
+    wastage,
+  } = updateToolDto;
+
+  return this.toolsRepository.updateTool({
+    where: { id },
+    data: {
+      name,
+      inserted_at: insertedAt,
+      status,
+      wastage,
+      ...(brand && brand.id && brand.name && {
+        brand: {
+          connectOrCreate: {
+            where: { id: brand.id },
+            create: {
+              id: brand.id,
+              name: brand.name,
+              waste_rate: 1,
+            },
+          },
+        },
+      }),
+      ...(category && category.id && category.name && {
+        category: {
+          connectOrCreate: {
+            where: { id: category.id },
+            create: {
+              id: category.id,
+              name: category.name,
+            },
+          },
+        },
+      }),
+      ...(bundle && bundle.id && bundle.name && {
+        bundle: {
+          connectOrCreate: {
+            where: { id: bundle.id },
+            create: {
+              id: bundle.id,
+              name: bundle.name,
+            },
+          },
+        },
+      }),
+    },
+  });
+}
 
   remove(id: number) {
     return this.toolsRepository.deleteTool({ id });
