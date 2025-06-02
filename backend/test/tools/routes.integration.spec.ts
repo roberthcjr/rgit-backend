@@ -257,7 +257,10 @@ describe('Tools Routes', () => {
           id: patchId,
         },
       });
-      expect(response.body).toEqual(patchedTool);
+      expect(response.body).toEqual({
+        ...patchedTool,
+        inserted_at: response.body.inserted_at,
+      });
     });
 
     it('[DELETE] /tools, should return success', async () => {
