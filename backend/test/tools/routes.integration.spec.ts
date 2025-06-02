@@ -19,6 +19,7 @@ describe('Tools Routes', () => {
     app = moduleFixture.createNestApplication();
     await app.init();
     prisma = new PrismaService();
+    await prisma.user.deleteMany();
     await prisma.user.create({
       data: {
         id: randomUUID(),
@@ -244,13 +245,19 @@ describe('Tools Routes', () => {
           name: 'MockedPatchTool',
         },
       });
-      return request(app.getHttpServer())
+      const response = await request(app.getHttpServer())
         .patch(`/tools/${patchId}`)
         .send({
           name: 'MockedPatchedTool',
+          status: 'LENDED',
         })
-        .set('Authorization', `Bearer ${token}`)
-        .expect(200);
+        .set('Authorization', `Bearer ${token}`);
+      const patchedTool = await prisma.tool.findUnique({
+        where: {
+          id: patchId,
+        },
+      });
+      expect(response.body).toEqual(patchedTool);
     });
 
     it('[DELETE] /tools, should return success', async () => {

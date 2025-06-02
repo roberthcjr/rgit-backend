@@ -17,6 +17,7 @@ describe('[POST] /auth/login', () => {
     app = moduleFixture.createNestApplication();
     await app.init();
     const prisma = new PrismaService();
+    await prisma.user.deleteMany();
     await prisma.user.create({
       data: {
         id: randomUUID(),

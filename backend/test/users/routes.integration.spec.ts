@@ -19,6 +19,7 @@ describe('Users Routes', () => {
     app = moduleFixture.createNestApplication();
     await app.init();
     prisma = new PrismaService();
+    await prisma.user.deleteMany();
     await prisma.user.create({
       data: {
         id: randomUUID(),
