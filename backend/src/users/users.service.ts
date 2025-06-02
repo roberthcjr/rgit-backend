@@ -19,7 +19,6 @@ export class UsersService {
     section,
   }: CreateUserDto) {
     const hashedPasssword = await this.hashService.hash(password);
-    console.log('Hashed password: ', hashedPasssword);
     const userCreated = await this.usersRepository.createUser({
       name,
       username,
@@ -28,7 +27,8 @@ export class UsersService {
       section,
       surname,
     });
-    const { password: supressedPassword, ...userCreatedResponse } = userCreated;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password: _, ...userCreatedResponse } = userCreated;
     return userCreatedResponse;
   }
 

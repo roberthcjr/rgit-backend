@@ -136,7 +136,8 @@ describe('Users Routes', () => {
           .send(user)
           .set('Authorization', `Bearer ${token}`);
 
-        const { password, ...expectedResponse } = user;
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { password: _, ...expectedResponse } = user;
 
         expect(response.body).toEqual({
           id: response.body.id,
