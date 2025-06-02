@@ -4,7 +4,7 @@ import * as request from 'supertest';
 import { AppModule } from 'src/app.module';
 import { PrismaModule } from 'src/prisma/prisma.module';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { randomUUID } from 'crypto';
+import { Hash, randomUUID } from 'crypto';
 import { HashService } from 'src/hash/hash.service';
 
 describe('Users Routes', () => {
@@ -187,26 +187,63 @@ describe('Users Routes', () => {
       });
     });
 
-    it('[PATCH] /users, should return success', async () => {
-      const patchId = randomUUID().toString();
-      await prisma.user.create({
-        data: {
-          id: patchId,
-          name: 'mockName',
-          surname: 'MockSurname',
-          job: 'mock',
-          section: 'mock',
-          username: 'mockusername',
-          password: 'mockpassword',
-        },
+    describe('[PATCH] /users', () => {
+      it('changing name, should return success', async () => {
+        const patchId = randomUUID().toString();
+        await prisma.user.create({
+          data: {
+            id: patchId,
+            name: 'mockName',
+            surname: 'MockSurname',
+            job: 'mock',
+            section: 'mock',
+            username: 'mockusername',
+            password: 'mockpassword',
+          },
+        });
+        return request(app.getHttpServer())
+          .patch(`/users/${patchId}`)
+          .send({
+            name: 'MockedPatchedUser',
+          })
+          .set('Authorization', `Bearer ${token}`)
+          .expect(200);
       });
-      return request(app.getHttpServer())
-        .patch(`/users/${patchId}`)
-        .send({
-          name: 'MockedPatchedUser',
-        })
-        .set('Authorization', `Bearer ${token}`)
-        .expect(200);
+
+      it('changing password, should create a new hash', async () => {
+        const patchId = randomUUID().toString();
+        await prisma.user.create({
+          data: {
+            id: patchId,
+            name: 'mockName',
+            surname: 'MockSurname',
+            job: 'mock',
+            section: 'mock',
+            username: 'mockusername',
+            password: 'mockpassword',
+          },
+        });
+        await request(app.getHttpServer())
+          .patch(`/users/${patchId}`)
+          .send({
+            password: 'newPassword',
+          })
+          .set('Authorization', `Bearer ${token}`);
+
+        const { password: updatedPassword } = await prisma.user.findFirst({
+          where: {
+            id: patchId,
+          },
+        });
+
+        const hashService = new HashService();
+        const isValidPassword = await hashService.compare(
+          'newPassword',
+          updatedPassword,
+        );
+
+        expect(isValidPassword).toBeTruthy();
+      });
     });
 
     it('[DELETE] /users, should return success', async () => {
