@@ -4,7 +4,7 @@ import * as request from 'supertest';
 import { AppModule } from 'src/app.module';
 import { PrismaModule } from 'src/prisma/prisma.module';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Hash, randomUUID } from 'crypto';
+import { randomUUID } from 'crypto';
 import { HashService } from 'src/hash/hash.service';
 
 describe('Users Routes', () => {
