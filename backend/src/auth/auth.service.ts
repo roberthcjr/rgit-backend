@@ -7,12 +7,14 @@ import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
 import { UsersRepository } from 'src/users/users.repository';
 import { JwtDto } from './dtos/jwt.dto';
+import { HashService } from 'src/hash/hash.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersRepository: UsersRepository,
     private jwtService: JwtService,
+    private hashService: HashService,
   ) {}
 
   async validateUser(username: string, pass: string): Promise<any> {
@@ -23,7 +25,12 @@ export class AuthService {
 
     if (!user) throw new NotFoundException();
 
-    if (pass !== user.password) throw new UnauthorizedException();
+    const isCorrectPassword = await this.hashService.compare(
+      pass,
+      user.password,
+    );
+
+    if (!isCorrectPassword) throw new UnauthorizedException();
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...result } = user;
