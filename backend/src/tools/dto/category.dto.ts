@@ -1,5 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsDefined, IsString, IsUUID, ValidateIf } from 'class-validator';
+import { IsDefined, IsString, IsUUID } from 'class-validator';
 
 export class CategoryDto {
   @ApiPropertyOptional()

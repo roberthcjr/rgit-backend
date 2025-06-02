@@ -1,14 +1,14 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsOptional, IsString, IsUUID } from 'class-validator';
+import { IsDefined, IsString, IsUUID } from 'class-validator';
 
 export class BundleDto {
   @ApiPropertyOptional()
-  @IsOptional()
+  @IsDefined({ message: 'The name field is required when brand is provided.' })
   @IsString()
   name?: string;
 
   @ApiPropertyOptional()
-  @IsOptional()
+  @IsDefined({ message: 'The id field is required when brand is provided.' })
   @IsUUID()
   id?: string;
 }

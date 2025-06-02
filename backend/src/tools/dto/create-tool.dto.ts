@@ -1,5 +1,4 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Brand, Category } from '@prisma/client';
 import { IsNotEmpty, IsOptional, IsString, ValidateIf, ValidateNested } from 'class-validator';
 import { BrandDto } from './brand.dto';
 import { Type } from 'class-transformer';
