@@ -6,6 +6,7 @@ import { PrismaModule } from 'src/prisma/prisma.module';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { randomUUID } from 'crypto';
 import { vol } from 'memfs';
+import { HashService } from 'src/hash/hash.service';
 
 describe('Tools Routes', () => {
   let app: INestApplication;
@@ -19,7 +20,9 @@ describe('Tools Routes', () => {
     app = moduleFixture.createNestApplication();
     await app.init();
     prisma = new PrismaService();
+    const hashService = new HashService();
     await prisma.user.deleteMany();
+    const hashedPassword = await hashService.hash('password');
     await prisma.user.create({
       data: {
         id: randomUUID(),
@@ -28,7 +31,7 @@ describe('Tools Routes', () => {
         job: 'dev',
         section: 'dev',
         username: 'robert',
-        password: 'password',
+        password: hashedPassword,
       },
     });
   });

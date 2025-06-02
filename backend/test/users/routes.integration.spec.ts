@@ -19,7 +19,9 @@ describe('Users Routes', () => {
     app = moduleFixture.createNestApplication();
     await app.init();
     prisma = new PrismaService();
+    const hashService = new HashService();
     await prisma.user.deleteMany();
+    const hashedPassword = await hashService.hash('password');
     await prisma.user.create({
       data: {
         id: randomUUID(),
@@ -28,7 +30,7 @@ describe('Users Routes', () => {
         job: 'dev',
         section: 'dev',
         username: 'robert',
-        password: 'password',
+        password: hashedPassword,
       },
     });
   });

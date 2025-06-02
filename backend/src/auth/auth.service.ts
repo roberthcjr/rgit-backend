@@ -25,8 +25,12 @@ export class AuthService {
 
     if (!user) throw new NotFoundException();
 
-    if (await !this.hashService.compare(pass, user.password))
-      throw new UnauthorizedException();
+    const isCorrectPassword = await this.hashService.compare(
+      pass,
+      user.password,
+    );
+
+    if (!isCorrectPassword) throw new UnauthorizedException();
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...result } = user;
