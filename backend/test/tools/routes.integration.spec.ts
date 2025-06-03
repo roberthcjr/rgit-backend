@@ -108,12 +108,8 @@ describe('Tools Routes', () => {
           .post('/tools')
           .send({
             name: 'MockingTool',
-            brand: { name: 'MockingBrand' ,
-              id: randomUUID()
-            },
-            category: { name: 'MockingCategory' ,
-              id: randomUUID()
-            },
+            brand: { name: 'MockingBrand', id: randomUUID() },
+            category: { name: 'MockingCategory', id: randomUUID() },
           })
           .set('Authorization', `Bearer ${token}`)
           .expect(201);
@@ -124,12 +120,8 @@ describe('Tools Routes', () => {
           .post('/tools')
           .send({
             name: 'MockingTool',
-            brand: { name: 'MockingBrand' ,
-              id: randomUUID()
-            },
-            category: { name: 'MockingCategory' ,
-              id: randomUUID()
-            },
+            brand: { name: 'MockingBrand', id: randomUUID() },
+            category: { name: 'MockingCategory', id: randomUUID() },
             externalId: '123123213',
           })
           .set('Authorization', `Bearer ${token}`)
