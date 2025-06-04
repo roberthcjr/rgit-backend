@@ -9,4 +9,5 @@ export class Tool {
   category?: Category;
   brand?: Brand;
   bundle?: Bundle;
+  externalId?: string;
 }

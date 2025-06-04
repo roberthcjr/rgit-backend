@@ -3,10 +3,10 @@ dist
 *.log
 *.md
 .git
-
 .env*
 
 test
 infra/compose*
-infra/Dockerfile
+
+
 

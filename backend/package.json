@@ -31,7 +31,7 @@
     "lint:eslint:fix": "eslint \"{src,apps,libs,test,infra}/**/*.ts\" --fix",
     "lint:prettier:check": "prettier --check .",
     "lint:prettier:format": "prettier --write .",
-    "prepare": "cd .. && husky backend/.husky",
+    "prepare": "[ \"$NODE_ENV\" = \"production\" ] || (cd .. && husky backend/.husky)",
     "commit": "cz"
   },
   "dependencies": {
