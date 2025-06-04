@@ -6,19 +6,42 @@ import { Readable } from 'stream';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 import csv = require('csv-parser');
 
+// TODO: review the logic to create brand and category when it does not exist
 @Injectable()
 export class ToolsService {
   constructor(private toolsRepository: ToolsRepository) {}
   create(createToolDto: CreateToolDto) {
     const { name, brand, category } = createToolDto;
+
     return this.toolsRepository.createTool({
       name,
-      brand: {
-        connect: brand,
-      },
-      category: {
-        connect: category,
-      },
+      ...(brand &&
+        brand.id &&
+        brand.name && {
+          brand: {
+            connectOrCreate: {
+              where: { id: brand.id },
+              create: {
+                id: brand.id,
+                name: brand.name,
+                waste_rate: 1,
+              },
+            },
+          },
+        }),
+      ...(category &&
+        category.id &&
+        category.name && {
+          category: {
+            connectOrCreate: {
+              where: { id: category.id },
+              create: {
+                id: category.id,
+                name: category.name,
+              },
+            },
+          },
+        }),
     });
   }
 
@@ -31,18 +54,56 @@ export class ToolsService {
   }
 
   update(id: number, updateToolDto: UpdateToolDto) {
-    const { brand, bundle, insertedAt, category, name, status, wastage } =
+    const { name, brand, category, bundle, insertedAt, status, wastage } =
       updateToolDto;
+
     return this.toolsRepository.updateTool({
       where: { id },
       data: {
-        brand: { connect: brand },
-        bundle: { connect: bundle },
-        inserted_at: insertedAt,
-        category: { connect: category },
         name,
+        inserted_at: insertedAt,
         status,
         wastage,
+        ...(brand &&
+          brand.id &&
+          brand.name && {
+            brand: {
+              connectOrCreate: {
+                where: { id: brand.id },
+                create: {
+                  id: brand.id,
+                  name: brand.name,
+                  waste_rate: 1,
+                },
+              },
+            },
+          }),
+        ...(category &&
+          category.id &&
+          category.name && {
+            category: {
+              connectOrCreate: {
+                where: { id: category.id },
+                create: {
+                  id: category.id,
+                  name: category.name,
+                },
+              },
+            },
+          }),
+        ...(bundle &&
+          bundle.id &&
+          bundle.name && {
+            bundle: {
+              connectOrCreate: {
+                where: { id: bundle.id },
+                create: {
+                  id: bundle.id,
+                  name: bundle.name,
+                },
+              },
+            },
+          }),
       },
     });
   }
@@ -52,13 +113,15 @@ export class ToolsService {
   }
 
   insertCSV(file: Express.Multer.File) {
-    const tools: { name: string }[] = [];
+    const tools: { name: string; externalId?: string }[] = [];
     const readableStream = Readable.from(file.buffer);
     return new Promise((resolve, reject) =>
       readableStream
         .on('error', (error) => reject(error))
         .pipe(csv())
-        .on('data', (data) => tools.push(data))
+        .on('data', (data) => {
+          tools.push(data);
+        })
         .on('end', async () => {
           resolve(this.toolsRepository.createManyTools(tools));
         }),

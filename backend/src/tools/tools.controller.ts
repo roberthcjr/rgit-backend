@@ -9,6 +9,7 @@ import {
   ParseIntPipe,
   UseInterceptors,
   UploadedFile,
+  ValidationPipe,
 } from '@nestjs/common';
 import { ToolsService } from './tools.service';
 import { CreateToolDto } from './dto/create-tool.dto';
@@ -30,7 +31,6 @@ import { ImportCsvDto } from './dto/import-csv.dto';
 export class ToolsController {
   constructor(private readonly toolsService: ToolsService) {}
 
-  // TODO: Implements validation
   @ApiBody({
     description: 'Tools info to be created',
     type: CreateToolDto,
@@ -42,7 +42,7 @@ export class ToolsController {
     description: 'Wrong tools info',
   })
   @Post()
-  create(@Body() createToolDto: CreateToolDto) {
+  create(@Body(ValidationPipe) createToolDto: CreateToolDto) {
     return this.toolsService.create(createToolDto);
   }
 
@@ -80,7 +80,6 @@ export class ToolsController {
     return this.toolsService.findOne(id);
   }
 
-  //TODO: Implements validation to body
   @ApiBody({ description: 'Changes tools infos', type: UpdateToolDto })
   @ApiOkResponse({
     description: 'Tool updated',
@@ -88,7 +87,7 @@ export class ToolsController {
   @Patch(':id')
   update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() updateToolDto: UpdateToolDto,
+    @Body(ValidationPipe) updateToolDto: UpdateToolDto,
   ) {
     return this.toolsService.update(id, updateToolDto);
   }
