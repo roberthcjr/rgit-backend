@@ -5,13 +5,11 @@ import { ToolsRepository } from './tools.repository';
 import { Readable } from 'stream';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 import csv = require('csv-parser');
-import { randomUUID } from 'crypto';
 
 // TODO: review the logic to create brand and category when it does not exist
 @Injectable()
 export class ToolsService {
   constructor(private toolsRepository: ToolsRepository) {}
-<<<<<<< HEAD
   create(createToolDto: CreateToolDto) {
     const { name, brand, category } = createToolDto;
 
@@ -44,38 +42,6 @@ export class ToolsService {
             },
           },
         }),
-=======
-  create({
-    name,
-    brand: { id: brandId, name: brandName },
-    category: { id: categoryId, name: categoryName },
-  }: CreateToolDto) {
-    return this.toolsRepository.createTool({
-      name,
-      brand: {
-        connectOrCreate: {
-          where: {
-            id: brandId ?? randomUUID(),
-          },
-          create: {
-            name: brandName,
-            waste_rate: 1,
-            id: randomUUID(),
-          },
-        },
-      },
-      category: {
-        connectOrCreate: {
-          where: {
-            id: categoryId ?? randomUUID(),
-          },
-          create: {
-            id: randomUUID(),
-            name: categoryName,
-          },
-        },
-      },
->>>>>>> main
     });
   }
 

@@ -29,17 +29,8 @@ export class CreateToolDto {
   brand?: BrandDto;
 
   @ApiPropertyOptional()
-<<<<<<< HEAD
   @IsOptional()
   @IsNotEmpty()
   @IsString()
   externalId?: string;
 }
-=======
-  category?: Category;
-  @ApiPropertyOptional()
-  brand?: Brand;
-  @ApiPropertyOptional()
-  externalId?: string;
-}
->>>>>>> main

@@ -3,7 +3,9 @@ import { IsDefined, IsString, IsUUID } from 'class-validator';
 
 export class CategoryDto {
   @ApiPropertyOptional()
-  @IsDefined({ message: 'The name field is required when category is provided.' })
+  @IsDefined({
+    message: 'The name field is required when category is provided.',
+  })
   @IsString()
   name?: string;
 
