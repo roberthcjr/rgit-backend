@@ -88,10 +88,10 @@ describe('Tools Routes', () => {
       });
 
       it('should return an array', async () => {
-        return request(app.getHttpServer())
+        const response = await request(app.getHttpServer())
           .get('/tools')
-          .set('Authorization', `Bearer ${token}`)
-          .expect((response) => Array.isArray(response));
+          .set('Authorization', `Bearer ${token}`);
+        expect(Array.isArray(response.body)).toBeTruthy();
       });
 
       it('retrieving an unique, should return success', async () => {
