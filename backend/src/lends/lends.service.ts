@@ -37,7 +37,20 @@ export class LendsService {
     return this.lendsRepository.lends({});
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} lend`;
+  async remove(id: string) {
+    const { toolId } = await this.lendsRepository.lend({
+      id,
+    });
+    await this.toolRepository.updateTool({
+      data: {
+        status: 'AVAILABLE',
+      },
+      where: {
+        id: toolId,
+      },
+    });
+    return this.lendsRepository.deleteLend({
+      id,
+    });
   }
 }
