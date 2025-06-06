@@ -28,6 +28,10 @@ export class LendsRepository {
       cursor,
       where,
       orderBy,
+      include: {
+        tool: true,
+        user: true,
+      },
     });
   }
 
