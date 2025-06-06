@@ -25,7 +25,7 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:integration": "pnpm run service:database:up && pnpm run service:wait:database && dotenv -e .env.test -- pnpm run migrate && dotenv -e .env.test -- npx prisma generate && dotenv -e .env.test -- jest --config ./test/jest-integration.json --verbose",
+    "test:integration": "pnpm run service:database:up && pnpm run service:wait:database && dotenv -e .env.test -- pnpm run migrate && dotenv -e .env.test -- npx prisma generate && dotenv -e .env.test -- jest --config ./test/jest-integration.json --verbose -i",
     "test:integration:watch": "pnpm run test:integration --watch",
     "lint:eslint:check": "eslint \"{src,apps,libs,test,infra}/**/*.ts\"",
     "lint:eslint:fix": "eslint \"{src,apps,libs,test,infra}/**/*.ts\" --fix",
