@@ -6,6 +6,7 @@ import { PrismaModule } from 'src/prisma/prisma.module';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { randomUUID } from 'crypto';
 import { HashService } from 'src/hash/hash.service';
+import { clearDatabase } from 'test/orchestrator';
 
 describe('[POST] /auth/login', () => {
   let app: INestApplication;
@@ -19,7 +20,7 @@ describe('[POST] /auth/login', () => {
     await app.init();
     const prisma = new PrismaService();
     const hashService = new HashService();
-    await prisma.user.deleteMany();
+    await clearDatabase(prisma);
     const hashedPassword = await hashService.hash('password');
     await prisma.user.create({
       data: {

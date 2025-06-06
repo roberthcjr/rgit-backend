@@ -5,6 +5,8 @@ import { ToolsRepository } from './tools.repository';
 import { Readable } from 'stream';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 import csv = require('csv-parser');
+import { randomUUID } from 'crypto';
+import type { Tool_Status } from '@prisma/client';
 
 // TODO: review the logic to create brand and category when it does not exist
 @Injectable()
@@ -45,8 +47,14 @@ export class ToolsService {
     });
   }
 
-  findAll() {
-    return this.toolsRepository.tools({});
+  findAll(filter?: {
+    where: {
+      status: Tool_Status;
+    };
+  }) {
+    return this.toolsRepository.tools({
+      where: filter.where,
+    });
   }
 
   findOne(id: number) {
