@@ -32,8 +32,20 @@ export class UsersService {
     return userCreatedResponse;
   }
 
-  findAll() {
-    return this.usersRepository.users({});
+  findAll({ hasLends }: { hasLends: boolean }) {
+    let filters = {};
+    if (!hasLends) {
+      filters = {
+        Lend: {
+          none: {},
+        },
+      };
+    }
+    return this.usersRepository.users({
+      where: {
+        ...filters,
+      },
+    });
   }
 
   findOne(id: string) {
