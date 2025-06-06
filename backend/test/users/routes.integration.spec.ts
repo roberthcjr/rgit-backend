@@ -6,6 +6,7 @@ import { PrismaModule } from 'src/prisma/prisma.module';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { randomUUID } from 'crypto';
 import { HashService } from 'src/hash/hash.service';
+import { clearDatabase } from 'test/orchestrator';
 
 describe('Users Routes', () => {
   let app: INestApplication;
@@ -19,8 +20,8 @@ describe('Users Routes', () => {
     app = moduleFixture.createNestApplication();
     await app.init();
     prisma = new PrismaService();
+    await clearDatabase(prisma);
     const hashService = new HashService();
-    await prisma.user.deleteMany();
     const hashedPassword = await hashService.hash('password');
     await prisma.user.create({
       data: {
@@ -75,6 +76,8 @@ describe('Users Routes', () => {
     });
 
     beforeEach(async () => {
+      await prisma.lend.deleteMany();
+      await prisma.tool.deleteMany();
       await prisma.user.deleteMany({
         where: {
           username: {
@@ -93,10 +96,71 @@ describe('Users Routes', () => {
       });
 
       it('should return an array', async () => {
-        return request(app.getHttpServer())
+        const response = await request(app.getHttpServer())
           .get('/users')
-          .set('Authorization', `Bearer ${token}`)
-          .expect((response) => Array.isArray(response));
+          .set('Authorization', `Bearer ${token}`);
+
+        expect(Array.isArray(response.body)).toBeTruthy();
+      });
+
+      it('querying over users without lends, should return users without lends', async () => {
+        const userLendId = randomUUID();
+        const toolId = 99999999;
+        await prisma.user.createMany({
+          data: [
+            {
+              id: userLendId,
+              name: 'user1',
+              job: 'user1',
+              password: 'user1',
+              section: 'user1',
+              username: 'user1',
+            },
+            {
+              name: 'user2',
+              job: 'user2',
+              password: 'user2',
+              section: 'user2',
+              username: 'user2',
+            },
+          ],
+        });
+        await prisma.tool.create({
+          data: {
+            id: toolId,
+            name: 'tool1',
+          },
+        });
+
+        await prisma.lend.create({
+          data: {
+            limit_date: new Date(Date.now()),
+            user: {
+              connect: {
+                id: userLendId,
+              },
+            },
+            tool: {
+              connect: {
+                id: toolId,
+              },
+            },
+          },
+        });
+        const response = await request(app.getHttpServer())
+          .get('/users?hasLends=false')
+          .set('Authorization', `Bearer ${token}`);
+
+        expect(
+          response.body.includes({
+            id: userLendId,
+            name: 'user1',
+            job: 'user1',
+            password: 'user1',
+            section: 'user1',
+            username: 'user1',
+          }),
+        ).toBeFalsy();
       });
 
       it('retrieving an unique, should return success', async () => {

@@ -7,6 +7,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { randomUUID } from 'crypto';
 import { vol } from 'memfs';
 import { HashService } from 'src/hash/hash.service';
+import { clearDatabase } from 'test/orchestrator';
 
 describe('Tools Routes', () => {
   let app: INestApplication;
@@ -21,7 +22,7 @@ describe('Tools Routes', () => {
     await app.init();
     prisma = new PrismaService();
     const hashService = new HashService();
-    await prisma.user.deleteMany();
+    await clearDatabase(prisma);
     const hashedPassword = await hashService.hash('password');
     await prisma.user.create({
       data: {
