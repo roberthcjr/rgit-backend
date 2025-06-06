@@ -16,6 +16,7 @@ export class ToolsService {
     name,
     brand: { id: brandId, name: brandName },
     category: { id: categoryId, name: categoryName },
+    status,
   }: CreateToolDto) {
     return this.toolsRepository.createTool({
       name,
@@ -42,6 +43,7 @@ export class ToolsService {
           },
         },
       },
+      status
     });
   }
 
