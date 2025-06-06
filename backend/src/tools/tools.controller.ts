@@ -9,6 +9,7 @@ import {
   ParseIntPipe,
   UseInterceptors,
   UploadedFile,
+  Query,
 } from '@nestjs/common';
 import { ToolsService } from './tools.service';
 import { CreateToolDto } from './dto/create-tool.dto';
@@ -24,6 +25,7 @@ import {
   ApiOkResponse,
 } from '@nestjs/swagger';
 import { ImportCsvDto } from './dto/import-csv.dto';
+import type { Tool_Status } from '@prisma/client';
 
 @ApiBearerAuth()
 @Controller('tools')
@@ -68,8 +70,12 @@ export class ToolsController {
     description: 'List of tools',
   })
   @Get()
-  findAll() {
-    return this.toolsService.findAll();
+  findAll(@Query('status') status: Tool_Status) {
+    return this.toolsService.findAll({
+      where: {
+        status,
+      },
+    });
   }
 
   @ApiOkResponse({
