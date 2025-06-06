@@ -7,6 +7,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { randomUUID } from 'crypto';
 import { vol } from 'memfs';
 import { HashService } from 'src/hash/hash.service';
+import type { Prisma } from '@prisma/client';
 import { clearDatabase } from 'test/orchestrator';
 
 describe('Tools Routes', () => {
@@ -78,6 +79,8 @@ describe('Tools Routes', () => {
 
     beforeEach(async () => {
       await prisma.tool.deleteMany();
+      await prisma.category.deleteMany();
+      await prisma.brand.deleteMany();
     });
 
     describe('[GET] /tools', () => {
@@ -93,6 +96,31 @@ describe('Tools Routes', () => {
           .get('/tools')
           .set('Authorization', `Bearer ${token}`);
         expect(Array.isArray(response.body)).toBeTruthy();
+      });
+
+      it('querying over available tools, should return an array', async () => {
+        const queryTestMockTools: Prisma.ToolCreateManyInput[] = [
+          {
+            name: 'Mock1',
+            status: 'AVAILABLE',
+          },
+          {
+            name: 'Mock2',
+            status: 'UNAVAILABLE',
+          },
+          {
+            name: 'Mock3',
+            status: 'LENDED',
+          },
+        ];
+        await prisma.tool.createMany({
+          data: queryTestMockTools,
+        });
+        const response = await request(app.getHttpServer())
+          .get('/tools?status=AVAILABLE')
+          .set('Authorization', `Bearer ${token}`);
+
+        expect(response.body.length).toBe(1);
       });
 
       it('retrieving an unique, should return success', async () => {
