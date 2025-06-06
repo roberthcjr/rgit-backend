@@ -9,12 +9,12 @@ import {
 
 export class BrandDto {
   @ApiPropertyOptional()
-  @IsDefined({ message: 'The name field is required when brand is provided.' })
+  @IsDefined({ message: 'name field is required when brand is provided.' })
   @IsString()
   name?: string;
 
   @ApiPropertyOptional()
-  @IsDefined({ message: 'The id field is required when brand is provided.' })
+  @IsDefined({ message: 'id field is required when brand is provided.' })
   @IsUUID()
   id?: string;
 

@@ -138,6 +138,78 @@ describe('Tools Routes', () => {
           .set('Authorization', `Bearer ${token}`)
           .expect(404);
       });
+
+      it('sending only tool name, should return created', async () => {
+        return request(app.getHttpServer())
+          .post('/tools')
+          .send({
+            name: 'MockingTool',
+          })
+          .set('Authorization', `Bearer ${token}`)
+          .expect(201);
+      });
+
+      it('sending tool name, but empty brand and category, should return validation in response and return bad request', async () => {
+        const response = await request(app.getHttpServer())
+          .post('/tools')
+          .send({
+            name: 'MockingTool',
+            brand: {},
+            category: {},
+          })
+          .set('Authorization', `Bearer ${token}`)
+          .expect(400);
+
+        expect(response.body.message).toEqual(
+          expect.arrayContaining([
+            'category.name field is required when category is provided.',
+            'category.name must be a string',
+            'category.id field is required when category is provided.',
+            'category.id must be a UUID',
+            'brand.name field is required when brand is provided.',
+            'brand.name must be a string',
+            'brand.id field is required when brand is provided.',
+            'brand.id must be a UUID',
+          ]),
+        );
+      });
+
+      it('sending tool name, but only brand name (must be both, id and name), should return validation in response and return bad request', async () => {
+        const response = await request(app.getHttpServer())
+          .post('/tools')
+          .send({
+            name: 'MockingTool',
+            brand: { name: 'MockingBrand' },
+          })
+          .set('Authorization', `Bearer ${token}`)
+          .expect(400);
+
+        expect(response.body.message).toEqual(
+          expect.arrayContaining([
+            'brand.id field is required when brand is provided.',
+            'brand.id must be a UUID',
+          ]),
+        );
+      });
+
+      it('sending tool name, but only category id (must be both, id and name), should return validation in response and return bad request', async () => {
+        const response = await request(app.getHttpServer())
+          .post('/tools')
+          .send({
+            name: 'MockingTool',
+            category: { id: randomUUID() },
+          })
+          .set('Authorization', `Bearer ${token}`)
+          .expect(400);
+
+        expect(response.body.message).toEqual(
+          expect.arrayContaining([
+            'category.name field is required when category is provided.',
+            'category.name must be a string',
+          ]),
+        );
+        expect(response.body.error).toBe('Bad Request');
+      });
     });
 
     describe('[POST] /tools/importCSV', () => {
