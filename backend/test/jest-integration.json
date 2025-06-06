@@ -8,7 +8,7 @@
   },
   "moduleNameMapper": {
     "src/(.*)": "<rootDir>/src/$1",
-    "tests/(.*)": "<rootDir>/__tests__/$1"
+    "test/(.*)": "<rootDir>/test/$1"
   },
   "testTimeout": 100000
 }

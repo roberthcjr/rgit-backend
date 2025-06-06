@@ -9,9 +9,10 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { HashService } from './hash/hash.service';
 import { HashModule } from './hash/hash.module';
+import { LendsModule } from './lends/lends.module';
 
 @Module({
-  imports: [ToolsModule, AuthModule, UsersModule, HashModule],
+  imports: [ToolsModule, AuthModule, UsersModule, HashModule, LendsModule],
   controllers: [AppController, AuthController],
   providers: [
     AppService,
