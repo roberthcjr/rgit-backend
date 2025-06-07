@@ -144,14 +144,14 @@ describe('Tools Routes', () => {
           .expect(201);
       });
 
-      it('sending externalId, should return created', async () => {
+      it('sending external_id, should return created', async () => {
         return request(app.getHttpServer())
           .post('/tools')
           .send({
             name: 'MockingTool',
             brand: { name: 'MockingBrand' },
             category: { name: 'MockingCategory' },
-            externalId: '123123213',
+            external_id: '123123213',
           })
           .set('Authorization', `Bearer ${token}`)
           .expect(201);
@@ -196,8 +196,9 @@ describe('Tools Routes', () => {
         expect(response.status).toBe(201);
       });
 
-      it('should return created and the expected number of tools created when passing externalId', async () => {
-        const baseContent = 'name,externalId\nToolA,1231231\nToolB,2132312\n';
+      it('should return created and the expected number of tools created when passing external_id', async () => {
+        const baseContent =
+          'name\texternal_id\nToolA\t1231231\nToolB\t2132312\n';
 
         vol.fromJSON(
           {
@@ -217,6 +218,73 @@ describe('Tools Routes', () => {
 
         expect(response.body.count).toBe(2);
         expect(response.status).toBe(201);
+      });
+
+      it('should create the correct qnt of tool when qnt in csv', async () => {
+        const baseContent = 'name\texternal_id\tqnt\nToolA\t1231231\t4,000';
+
+        vol.fromJSON(
+          {
+            './tools.csv': baseContent,
+          },
+          '/mock',
+        );
+
+        const buffer = vol.readFileSync('/mock/tools.csv');
+        const response = await request(app.getHttpServer())
+          .post('/tools/importCSV')
+          .attach('file', buffer, {
+            filename: 'tools.csv',
+            contentType: 'text/csv',
+          })
+          .set('Authorization', `Bearer ${token}`);
+
+        expect(response.body.count).toBe(4);
+        expect(response.status).toBe(201);
+      });
+
+      it('should create the correct tool with full infos (name, external_id, buy_date, amount, qnt)', async () => {
+        const baseContent =
+          'name\texternal_id\tinserted_at\tamount\tqnt\nToolA\t1231231\t12/19/2019\t231,1250\t4,000';
+
+        vol.fromJSON(
+          {
+            './tools.csv': baseContent,
+          },
+          '/mock',
+        );
+
+        const buffer = vol.readFileSync('/mock/tools.csv');
+        await request(app.getHttpServer())
+          .post('/tools/importCSV')
+          .attach('file', buffer, {
+            filename: 'tools.csv',
+            contentType: 'text/csv',
+          })
+          .set('Authorization', `Bearer ${token}`);
+
+        const createdTool = await prisma.tool.findFirst({
+          where: {
+            external_id: '1231231',
+          },
+        });
+
+        expect({
+          ...createdTool,
+          inserted_at: createdTool.inserted_at.toISOString(),
+          amount_in_cents: createdTool.amount_in_cents.toString(),
+        }).toEqual({
+          id: createdTool.id,
+          name: 'ToolA',
+          inserted_at: '2019-12-19T03:00:00.000Z',
+          wastage: 0,
+          status: 'AVAILABLE',
+          categoryId: null,
+          brandId: null,
+          bundleId: null,
+          external_id: '1231231',
+          amount_in_cents: '2311250',
+        });
       });
 
       it('should return bad request when wrong type', async () => {
