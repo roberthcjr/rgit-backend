@@ -276,7 +276,7 @@ describe('Tools Routes', () => {
         }).toEqual({
           id: createdTool.id,
           name: 'ToolA',
-          inserted_at: '2019-12-19T03:00:00.000Z',
+          inserted_at: new Date('12/19/2019').toISOString(),
           wastage: 0,
           status: 'AVAILABLE',
           categoryId: null,
