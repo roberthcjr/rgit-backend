@@ -61,7 +61,9 @@ model Tool {
   bundle Bundle? @relation(fields: [bundleId], references: [id])
   bundleId String?
 
-  externalId String?
+  external_id String?
+
+  amount_in_cents BigInt?
 
   Lend Lend[]
 }
