@@ -26,7 +26,8 @@ export class CsvValidationPipe implements PipeTransform {
   }
 
   isAcetableType(value) {
-    const mimeType = 'text/csv';
+    const mimeType = 'text/tab-separated-values';
+    console.log(value.mimeType);
     return value.mimetype === mimeType;
   }
 }
