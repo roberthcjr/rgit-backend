@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 
 @Injectable()
-export class CsvValidationPipe implements PipeTransform {
+export class TsvValidationPipe implements PipeTransform {
   transform(value: any) {
     if (!this.isAccetableSize(value))
       throw new HttpException(
@@ -26,7 +26,8 @@ export class CsvValidationPipe implements PipeTransform {
   }
 
   isAcetableType(value) {
-    const mimeType = 'text/csv';
+    const mimeType = 'text/tab-separated-values';
+    console.log(value.mimeType);
     return value.mimetype === mimeType;
   }
 }

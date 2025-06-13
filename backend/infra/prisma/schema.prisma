@@ -63,7 +63,7 @@ model Tool {
 
   external_id String?
 
-  amount_in_cents BigInt?
+  amount String?
 
   Lend Lend[]
 }

@@ -15,7 +15,7 @@ import { ToolsService } from './tools.service';
 import { CreateToolDto } from './dto/create-tool.dto';
 import { UpdateToolDto } from './dto/update-tool.dto';
 import { FileInterceptor } from '@nestjs/platform-express/multer';
-import { CsvValidationPipe } from './validator/csv.validator';
+import { TsvValidationPipe } from './validator/tsv.validator';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -59,10 +59,10 @@ export class ToolsController {
   @ApiCreatedResponse({
     description: 'Tools imported',
   })
-  @Post('/importCSV')
+  @Post('/import')
   @UseInterceptors(FileInterceptor('file'))
-  createCSV(@UploadedFile(CsvValidationPipe) file: Express.Multer.File) {
-    return this.toolsService.insertCSV(file);
+  createCSV(@UploadedFile(TsvValidationPipe) file: Express.Multer.File) {
+    return this.toolsService.import(file);
   }
 
   //TODO: Implements pagination

@@ -80,15 +80,17 @@ export class ToolsService {
     return this.toolsRepository.deleteTool({ id });
   }
 
-  insertCSV(file: Express.Multer.File) {
+  import(file: Express.Multer.File) {
     const tools: {
       name: string;
       external_id?: string;
       inserted_at?: Date;
-      amount_in_cents: number;
+      amount: string;
     }[] = [];
+
     const readableStream = Readable.from(file.buffer);
-    return new Promise((resolve, reject) =>
+
+    return new Promise((resolve, reject) => {
       readableStream
         .on('error', (error) => reject(error))
         .pipe(
@@ -97,24 +99,41 @@ export class ToolsService {
           }),
         )
         .on('data', (data) => {
-          const amount_in_cents = data.amount
-            ? Number(data.amount.replace(',', '.')) * 10000
-            : undefined;
-          const inserted_at = data.inserted_at
-            ? new Date(data.inserted_at)
-            : undefined;
-          const qnt = Number(data.qnt ? data.qnt.replace(',', '.') : 1);
-          const insertData = {
-            name: data.name,
-            inserted_at,
-            amount_in_cents,
-            external_id: data.external_id,
-          };
-          for (let i = 0; i < qnt; i++) tools.push(insertData);
+          try {
+            const name = data.name;
+            const external_id = data.external_id || undefined;
+            const inserted_at = data.inserted_at
+              ? new Date(data.inserted_at)
+              : undefined;
+
+            const amountRaw = data.amount || data.valor || '0';
+            const amountWithoutDots = amountRaw.replace('.', '');
+            const amount = amountWithoutDots.replace(',', '.');
+
+            const qnt = Number(data.qnt?.replace(',', '.') || 1);
+
+            const insertData = {
+              name,
+              external_id,
+              inserted_at,
+              amount,
+            };
+
+            for (let i = 0; i < qnt; i++) {
+              tools.push(insertData);
+            }
+          } catch (err) {
+            console.error('Something went wrong when processing:', data, err);
+          }
         })
         .on('end', async () => {
-          resolve(this.toolsRepository.createManyTools(tools));
-        }),
-    );
+          try {
+            const result = await this.toolsRepository.createManyTools(tools);
+            resolve(result);
+          } catch (err) {
+            reject(err);
+          }
+        });
+    });
   }
 }
