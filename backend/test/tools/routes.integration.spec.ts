@@ -169,7 +169,7 @@ describe('Tools Routes', () => {
       });
     });
 
-    describe('[POST] /tools/importCSV', () => {
+    describe('[POST] /tools/import', () => {
       beforeEach(() => {
         vol.reset();
       });
@@ -185,7 +185,7 @@ describe('Tools Routes', () => {
 
         const buffer = vol.readFileSync('/mock/tools.tsv');
         const response = await request(app.getHttpServer())
-          .post('/tools/importCSV')
+          .post('/tools/import')
           .attach('file', buffer, {
             filename: 'tools.tsv',
             contentType: 'text/tab-separated-values',
@@ -209,7 +209,7 @@ describe('Tools Routes', () => {
 
         const buffer = vol.readFileSync('/mock/tools.tsv');
         const response = await request(app.getHttpServer())
-          .post('/tools/importCSV')
+          .post('/tools/import')
           .attach('file', buffer, {
             filename: 'tools.tsv',
             contentType: 'text/tab-separated-values',
@@ -232,7 +232,7 @@ describe('Tools Routes', () => {
 
         const buffer = vol.readFileSync('/mock/tools.tsv');
         const response = await request(app.getHttpServer())
-          .post('/tools/importCSV')
+          .post('/tools/import')
           .attach('file', buffer, {
             filename: 'tools.tsv',
             contentType: 'text/tab-separated-values',
@@ -256,7 +256,7 @@ describe('Tools Routes', () => {
 
         const buffer = vol.readFileSync('/mock/tools.tsv');
         await request(app.getHttpServer())
-          .post('/tools/importCSV')
+          .post('/tools/import')
           .attach('file', buffer, {
             filename: 'tools.tsv',
             contentType: 'text/tab-separated-values',
@@ -298,7 +298,7 @@ describe('Tools Routes', () => {
 
         const buffer = vol.readFileSync('/mock/tools.pdf');
         const response = await request(app.getHttpServer())
-          .post('/tools/importCSV')
+          .post('/tools/import')
           .attach('file', buffer, {
             filename: 'tools.pdf',
             contentType: 'text/pdf',
@@ -325,7 +325,7 @@ describe('Tools Routes', () => {
 
         const buffer = vol.readFileSync('/mock/tools.csv');
         const response = await request(app.getHttpServer())
-          .post('/tools/importCSV')
+          .post('/tools/import')
           .attach('file', buffer, {
             filename: 'tools.csv',
             contentType: 'text/csv',

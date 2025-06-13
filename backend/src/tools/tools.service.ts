@@ -80,7 +80,7 @@ export class ToolsService {
     return this.toolsRepository.deleteTool({ id });
   }
 
-  insertCSV(file: Express.Multer.File) {
+  import(file: Express.Multer.File) {
     const tools: {
       name: string;
       external_id?: string;

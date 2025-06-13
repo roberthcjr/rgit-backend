@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 
 @Injectable()
-export class CsvValidationPipe implements PipeTransform {
+export class TsvValidationPipe implements PipeTransform {
   transform(value: any) {
     if (!this.isAccetableSize(value))
       throw new HttpException(
