@@ -12,7 +12,7 @@ export class LendsService {
   async create({ limit_date: limitDate, tool, user }: CreateLendDto) {
     await this.toolRepository.updateTool({
       data: {
-        status: 'AVAILABLE',
+        status: 'LENDED',
       },
       where: {
         id: tool.id,

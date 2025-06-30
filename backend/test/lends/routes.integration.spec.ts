@@ -154,6 +154,21 @@ describe('Lends Routes', () => {
         expect(lendCreated).toBeDefined();
       });
 
+      it('should change tool status to lended in db', async () => {
+        const response = await request(app.getHttpServer())
+          .post('/lends')
+          .send(lendMock)
+          .set('Authorization', `Bearer ${token}`);
+
+        const toolLended = await prisma.tool.findFirst({
+          where: {
+            id: response.body.toolId,
+          },
+        });
+
+        expect(toolLended.status).toEqual('LENDED');
+      });
+
       it.skip('with incorrect body, should return bad request', async () => {
         return request(app.getHttpServer())
           .post('/lends')
