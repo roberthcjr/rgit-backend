@@ -6,7 +6,6 @@ import {
   Param,
   Patch,
   Post,
-  Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import {
@@ -43,8 +42,8 @@ export class UsersController {
     description: 'List of users',
   })
   @Get()
-  findAll(@Query('hasLends') hasLends: boolean) {
-    return this.usersService.findAll({ hasLends });
+  findAll() {
+    return this.usersService.findAll();
   }
 
   @ApiOkResponse({
