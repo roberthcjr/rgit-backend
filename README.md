@@ -1,79 +1,152 @@
-# Ferramentaria
+# 🧠 Tool Management API — Scalable & Modern RESTful Service
 
-Atualmente, muitas empresas gerenciam suas ferramentas e equipamentos por meio de planilhas, o que pode levar a erros, perda de informação e falta de controle sobre os ativos. Este projeto propõe o desenvolvimento de um sistema web para gestão de ferramentas, permitindo controle eficiente sobre empréstimos, devoluções, manutenção e estoque. O sistema facilitará a gestão através de uma interface intuitiva e funcionalidades que garantam maior rastreabilidade e segurança das informações. Com a adoção de tecnologias modernas, como bancos de dados relacionais, autenticação segura e dashboards interativos, o projeto visa otimizar o tempo dos gestores e reduzir prejuízos causados por perdas ou extravios.
+This is a scalable and well-documented API designed to manage tools, but it can be easily adapted to handle any type of material your business requires. If you're interested in expanding the use case for your needs, feel free to schedule a conversation with the developer.
 
-# Como rodar
-:warning: **Serviço apenas para o backend do projeto**: Para rodar a interface gráfica, verifique o repositório: https://github.com/roberthcjr/rgit-frontend
+The API is built with **NestJS**, uses **Prisma ORM** for database access, and relies on **PostgreSQL** as a robust relational database system. The entire application is containerized via **Docker Compose**, and includes **Swagger** for interactive and automatic API documentation.
 
-Clone o projeto
+---
+
+## 🚀 Tech Stack
+
+### 🧱 NestJS — [https://nestjs.com](https://nestjs.com)
+- Scalable architecture inspired by OOP, FP, and FRP.
+- Modular structure supporting clear separation of concerns.
+- Excellent dependency injection system and testing capabilities.
+- Widely adopted by enterprises such as Adidas, Autodesk, and Decathlon.
+
+### 🔄 Prisma ORM — [https://www.prisma.io](https://www.prisma.io)
+- Strongly typed, performant, and intuitive database client.
+- Built-in support for migrations and automatic schema generation.
+- Excellent developer experience with autocompletion and validation.
+
+### 🐘 PostgreSQL — [https://www.postgresql.org](https://www.postgresql.org)
+- Reliable, open-source, relational database.
+- Supports ACID compliance, complex queries, constraints, and transactions.
+- Chosen for its stability, flexibility, and rich ecosystem.
+
+### 🐳 Docker Compose
+- Simplifies local development and deployment across environments.
+- Spins up all services with one command.
+- Ensures isolated and reproducible infrastructure.
+
+### 📚 Swagger (OpenAPI)
+- Auto-generated API documentation.
+- Interactive interface to explore and test endpoints.
+- Useful for frontend/mobile integrations and third-party consumers.
+
+---
+
+## ⚙️ How to Run
+
+> ⚠️ **This project provides only the backend services.** To run the graphical interface, check the frontend repository:  
+> 🔗 https://github.com/roberthcjr/rgit-frontend
+
+### 🔁 Clone the project
+
 ```bash
 git clone https://github.com/roberthcjr/rgit-backend.git
+cd rgit-backend
 ```
 
-Instale o Docker na sua máquina seguindo a própria documentação que está no seguinte link:
+### 🐳 Make sure you have Docker installed:
 
-https://docs.docker.com/get-started/get-docker/
+Install Docker following the official documentation:  
+👉 https://docs.docker.com/get-started/get-docker/
 
-Utilize o comando com o gerenciador de pacotes da sua preferência o seguinte 
+---
+
+### ▶️ Run with Docker (recommended)
+
+Use your preferred package manager to run:
 
 ```bash
 npm run service:up
-```
-```bash
+# or
 pnpm run service:up
-```
-```bash
+# or
 yarn run service:up
 ```
 
- para rodar o serviço em background ou 
- 
- ```bash
- npm run service:watch
- ``` 
- ```bash
- pnpm run service:watch
- ``` 
- ```bash
- yarn run service:watch
- ``` 
- 
- para rodar em modo debug, no qual as mudanças serão aplicadas quando salvar.
+To run in **watch/debug mode** (auto-reloads on file save):
 
-Quando finalizar, utilize os comandos 
+```bash
+npm run service:watch
+# or
+pnpm run service:watch
+# or
+yarn run service:watch
+```
+
+To stop the service:
+
 ```bash
 npm run service:stop
-```
-```bash
+# or
 pnpm run service:stop
-```
-```bash
+# or
 yarn run service:stop
 ```
- e 
- ```bash
- npm run service:down
- ```
- ```bash
- pnpm run service:down
- ```
- ```bash
- yarn run service:down
- ```
- respectivamente, para parar e remover o container.
 
- 
-:warning: **Para rodar apenas localmente sem `Docker`**: Copie o conteúdo de .env.test para um .env e utilize um dos comandos:
+To remove the containers:
 
- ```bash
- npm run start #Modo prod
- npm run start:dev #Modo dev
- ```
- ```bash
- pnpm run start #Modo prod
- pnpm run start:dev #Modo dev
- ```
- ```bash
- yarn run start #Modo prod
- yarn run start:dev #Modo dev
- ```
+```bash
+npm run service:down
+# or
+pnpm run service:down
+# or
+yarn run service:down
+```
+
+---
+
+### 🧪 Run Locally Without Docker
+
+> ⚠️ For local-only environments (without Docker)
+
+Copy the contents of `.env.test` to a new `.env` file, then run:
+
+```bash
+npm run start         # Production mode
+npm run start:dev     # Development mode
+```
+
+```bash
+pnpm run start
+pnpm run start:dev
+```
+
+```bash
+yarn run start
+yarn run start:dev
+```
+
+---
+
+## 📄 API Documentation
+
+Once running, access Swagger at:  
+📍 `http://localhost:3000/api`
+
+The Swagger UI includes:
+- Endpoint list with input/output schemas
+- HTTP status codes
+- Example payloads and responses
+
+---
+
+## 💼 Why This Project Matters
+
+- Built with industry-standard tools and design patterns.
+- Modular, testable, and production-ready architecture.
+- Easy to extend and onboard new developers.
+- Ideal for startups or enterprise-level applications.
+
+---
+
+## 📬 Contact
+
+Developed by **Robert Heitor de Carvalho Júnior**  
+📧 roberthcjr1999@gmail.com  
+🔗 [LinkedIn](www.linkedin.com/in/robert-heitor-de-carvalho)
+
+---
