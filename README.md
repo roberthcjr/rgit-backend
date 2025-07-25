@@ -125,7 +125,7 @@ yarn run start:dev
 ## 📄 API Documentation
 
 Once running, access Swagger at:  
-📍 `http://localhost:3000/api`
+📍 `http://localhost:8080/api`
 
 The Swagger UI includes:
 - Endpoint list with input/output schemas
